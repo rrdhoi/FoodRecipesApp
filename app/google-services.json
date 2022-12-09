@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "477049657294",
+    "project_id": "food-recipes-ff6c7",
+    "storage_bucket": "food-recipes-ff6c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:477049657294:android:aa76e0b25852db5c553d9f",
+        "android_client_info": {
+          "package_name": "com.jagoteori.foodrecipesapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "477049657294-ggfp03s8i0dc968c3670oltduu03navm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLyTz6p8wUkv0nTd2FSyQq4SWVr_iZNY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "477049657294-ggfp03s8i0dc968c3670oltduu03navm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
