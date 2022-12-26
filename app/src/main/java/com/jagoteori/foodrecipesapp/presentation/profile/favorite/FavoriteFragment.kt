@@ -1,4 +1,4 @@
-package com.jagoteori.foodrecipesapp.presentation.favorite
+package com.jagoteori.foodrecipesapp.presentation.profile.favorite
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

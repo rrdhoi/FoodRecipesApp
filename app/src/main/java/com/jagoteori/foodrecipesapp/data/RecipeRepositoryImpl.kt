@@ -40,7 +40,7 @@ class RecipeRepositoryImpl(private val remoteDataSource: RemoteDataSource) : Rec
     override suspend fun addRecipe(recipe: RecipeEntity): Resource<String> =
         when (val response = remoteDataSource.addRecipe(DataMapper.recipeEntityToModel(recipe))) {
             is ApiResponse.Success -> Resource.Success(response.data)
-            is ApiResponse.Empty -> Resource.Error("Recipe not found")
             is ApiResponse.Error -> Resource.Error(response.errorMessage)
+            else -> Resource.Error("Unknown Error")
         }
 }

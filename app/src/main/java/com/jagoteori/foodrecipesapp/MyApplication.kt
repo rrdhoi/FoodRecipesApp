@@ -1,10 +1,7 @@
 package com.jagoteori.foodrecipesapp
 
 import android.app.Application
-import com.jagoteori.foodrecipesapp.di.firebaseModule
-import com.jagoteori.foodrecipesapp.di.repositoryModule
-import com.jagoteori.foodrecipesapp.di.useCaseModule
-import com.jagoteori.foodrecipesapp.di.viewModelModule
+import com.jagoteori.foodrecipesapp.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -17,7 +14,15 @@ class MyApplication : Application() {
         startKoin {
             androidLogger(Level.NONE)
             androidContext(this@MyApplication)
-            modules(listOf(firebaseModule, repositoryModule, viewModelModule, useCaseModule))
+            modules(
+                listOf(
+                    firebaseModule,
+                    remoteDataSource,
+                    repositoryModule,
+                    viewModelModule,
+                    useCaseModule
+                )
+            )
         }
     }
 }

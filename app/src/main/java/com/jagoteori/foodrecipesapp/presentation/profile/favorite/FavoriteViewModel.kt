@@ -1,4 +1,4 @@
-package com.jagoteori.foodrecipesapp.presentation.favorite
+package com.jagoteori.foodrecipesapp.presentation.profile.favorite
 
 import androidx.lifecycle.ViewModel
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeUseCase

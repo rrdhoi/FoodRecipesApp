@@ -1,7 +1,17 @@
 <resources>
     <string name="app_name">FoodRecipesApp</string>
     <string name="menu_home">Home</string>
-    <string name="menu_favorite">Favorite</string>
+    <string name="menu_add_recipe">Add Recipe</string>
     <string name="menu_profile">Profile</string>
     <string name="detail_recipe_page">Detail Recipe</string>
+    <string name="image_recipe">Image Recipe</string>
+    
+    <string-array name="list_quantity">
+        <item>--</item>
+        <item>Gram</item>
+        <item>Biji</item>
+        <item>Buah</item>
+        <item>Lembar</item>
+        <item>Sesuai Kebutuhan</item>
+    </string-array>
 </resources>

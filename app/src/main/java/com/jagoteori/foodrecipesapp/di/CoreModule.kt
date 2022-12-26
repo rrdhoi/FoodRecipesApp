@@ -6,6 +6,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.jagoteori.foodrecipesapp.data.RecipeRepositoryImpl
 import com.jagoteori.foodrecipesapp.data.source.remote.RemoteDataSource
 import com.jagoteori.foodrecipesapp.data.source.remote.RemoteDataSourceImpl
+import com.jagoteori.foodrecipesapp.data.source.remote.firestore.FirestoreQuery
 import com.jagoteori.foodrecipesapp.domain.repository.RecipeRepository
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeInteractor
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeUseCase
@@ -17,6 +18,10 @@ val firebaseModule = module {
     single { FirebaseFirestore.getInstance() }
     single { FirebaseAuth.getInstance() }
     single { FirebaseStorage.getInstance() }
+}
+
+val remoteDataSource = module {
+    single { FirestoreQuery(get()) }
 }
 
 val repositoryModule = module {

@@ -13,12 +13,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_favorite"
-        android:name="com.jagoteori.foodrecipesapp.presentation.favorite.FavoriteFragment"
-        android:label="@string/menu_favorite"
-        tools:layout="@layout/favorite_fragment" />
-
-    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.jagoteori.foodrecipesapp.presentation.profile.ProfileFragment"
         android:label="@string/menu_profile"
