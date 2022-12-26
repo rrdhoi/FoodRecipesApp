@@ -1,21 +1,15 @@
 package com.jagoteori.foodrecipesapp.presentation.add_recipe
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.res.ResourcesCompat
@@ -44,13 +38,13 @@ class AddRecipeActivity : AppCompatActivity() {
         binding.btnAddIngredient.setOnClickListener { addIngredient() }
         binding.imgRecipe.setOnClickListener { imagePicker(this, IMAGE_PICKER_ADD_RECIPE_CODE) }
         binding.btnAddStepCook.setOnClickListener { addStepCook() }
+
         binding.btnSubmit.setOnClickListener {
             if (checkIngredientValidAndSubmit()) {
                 Log.d("List Ingredient ::: ", "$listIngredients")
             }
         }
     }
-
 
 
     private fun addStepCook() {
@@ -69,10 +63,14 @@ class AddRecipeActivity : AppCompatActivity() {
 //        val indexFlexibleStepCook = flexibleListStepCook.indexOfChild()
         Log.d("addStepCook", "Index row Add Step: $indexRowAddStep")
         btnAddImageStepCook.setOnClickListener {
-            val concatTwoInt = "${indexRowAddStep+1}${flexibleListStepCook.childCount}".toInt()
-            val imageView = imageViewGenerated(this@AddRecipeActivity, concatTwoInt)
+            val concatTwoInt = "${indexRowAddStep}${flexibleListStepCook.childCount}".toInt()
+            val imageView =
+                StepCookFunction.stepImageViewGenerated(this@AddRecipeActivity, concatTwoInt)
             flexibleListStepCook.addView(imageView)
-            Log.d("btn add step", "concat : ${concatTwoInt}|| isi flexiblenya : ${flexibleListStepCook.childCount} || index parentView : ${indexRowAddStep}")
+            Log.d(
+                "btn add step",
+                "concat : ${concatTwoInt}|| isi flexiblenya : ${flexibleListStepCook.childCount} || index parentView : ${indexRowAddStep}"
+            )
         }
     }
 
@@ -149,12 +147,18 @@ class AddRecipeActivity : AppCompatActivity() {
     }
 
 
-
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             val uri: Uri = data?.data!!
+
+            StepCookFunction.addingImageIntoStepCookView(
+                activity = this,
+                parentView = binding.llListStepCook,
+                requestCode = requestCode,
+                uri = uri
+            )
 
             if (requestCode == IMAGE_PICKER_ADD_RECIPE_CODE)
                 Glide.with(this)
@@ -162,27 +166,6 @@ class AddRecipeActivity : AppCompatActivity() {
                     .load(uri)
                     .into(binding.imgRecipe)
 
-            Log.d("addrecipeActivity", "Request Codenya ::: $requestCode")
-            for (indexParentView in 0 until binding.llListStepCook.childCount) {
-                val rowAddStepCookingView = binding.llListStepCook.getChildAt(indexParentView)
-                val flexibleListStepCook = rowAddStepCookingView.findViewById<FlexboxLayout>(R.id.list_image_step_cook)
-
-                for (indexFlexibleView in 0 until flexibleListStepCook.childCount) {
-                    val concatTwoInt = "${indexParentView+1}${indexFlexibleView+1}".toInt()
-                    Log.d("addrecipeActivity", "indexParent(${indexParentView+1}) & indexFlexible(${indexFlexibleView+1})")
-                    if (requestCode == concatTwoInt) {
-                        val getChildFlexible = flexibleListStepCook.getChildAt(indexFlexibleView+1)
-                        Log.d("on Activity Result:", "concat : $concatTwoInt || index flexiblenya :$indexFlexibleView ||| view Tag: ${getChildFlexible.tag}")
-                        val imageView = getChildFlexible.findViewWithTag<ImageView>(concatTwoInt)
-
-                        Log.d("on Activity Result:", "imageView : ${imageView.tag}")
-                        Glide.with(this)
-                            .asBitmap()
-                            .load(uri)
-                            .into(imageView)
-                    }
-                }
-            }
 
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
@@ -191,9 +174,7 @@ class AddRecipeActivity : AppCompatActivity() {
         }
     }
 
-
     companion object {
         const val IMAGE_PICKER_ADD_RECIPE_CODE = 101
-        const val IMAGE_PICKER_ADD_STEP_COOK_CODE = 102
     }
 }
