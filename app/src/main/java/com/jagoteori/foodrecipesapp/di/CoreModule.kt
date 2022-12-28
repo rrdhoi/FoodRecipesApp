@@ -10,6 +10,7 @@ import com.jagoteori.foodrecipesapp.data.source.remote.firestore.FirestoreQuery
 import com.jagoteori.foodrecipesapp.domain.repository.RecipeRepository
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeInteractor
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeUseCase
+import com.jagoteori.foodrecipesapp.presentation.add_recipe.AddRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -21,7 +22,7 @@ val firebaseModule = module {
 }
 
 val remoteDataSource = module {
-    single { FirestoreQuery(get()) }
+    single { FirestoreQuery(get(), get()) }
 }
 
 val repositoryModule = module {
@@ -35,4 +36,5 @@ val useCaseModule = module {
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
+    viewModel { AddRecipeViewModel(get()) }
 }

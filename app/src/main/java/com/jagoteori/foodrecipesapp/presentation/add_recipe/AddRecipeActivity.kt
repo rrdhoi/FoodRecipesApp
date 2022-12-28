@@ -1,5 +1,6 @@
 package com.jagoteori.foodrecipesapp.presentation.add_recipe
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -13,21 +14,28 @@ import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.flexbox.FlexboxLayout
+import com.google.firebase.storage.FirebaseStorage
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.app.Constants
+import com.jagoteori.foodrecipesapp.app.extention.isEmpty
 import com.jagoteori.foodrecipesapp.app.extention.isNotNullOrEmpty
 import com.jagoteori.foodrecipesapp.app.extention.length
 import com.jagoteori.foodrecipesapp.app.extention.twoDigitsFormat
 import com.jagoteori.foodrecipesapp.app.utils.imagePicker
+import com.jagoteori.foodrecipesapp.data.Resource
 import com.jagoteori.foodrecipesapp.databinding.ActivityAddRecipeBinding
+import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
 import com.jagoteori.foodrecipesapp.domain.entity.ingredient.IngredientEntity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AddRecipeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddRecipeBinding
     private lateinit var spinnerListIngredient: Array<out String>
+    private val addRecipeViewModel: AddRecipeViewModel by viewModel()
 
+    private var imageRecipeUri: Uri = Uri.EMPTY
     private val listIngredients: ArrayList<IngredientEntity> = ArrayList()
     private val listStepCook: ArrayList<StepCookEntity> = ArrayList()
 
@@ -45,12 +53,44 @@ class AddRecipeActivity : AppCompatActivity() {
         binding.imgRecipe.setOnClickListener { imagePicker(this, IMAGE_PICKER_ADD_RECIPE_CODE) }
         binding.btnAddStepCook.setOnClickListener { addStepCookView() }
 
-        binding.btnSubmit.setOnClickListener {
-            if (checkIngredientValid(binding.listIngredients) || checkStepCookValid(binding.llListStepCook)) {
-                Log.d("List Step Cook ::: ", "$listStepCook")
-                Log.d("List Ingredient ::: ", "$listIngredients")
-            }
+        binding.btnSubmit.setOnClickListener { submitRecipe()}
 
+        addRecipeViewModel.addRecipe.observe(this) {
+            when(it) {
+                is Resource.Success -> {
+                    Log.d("Success Upload Recipe", it.data.toString())
+                }
+                is Resource.Error -> {
+                    Log.d("Error Upload Recipe", it.message.toString())
+                }
+            }
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun submitRecipe() {
+        if (binding.etTitle.text.isBlank() or binding.etDescription.text.isBlank() or imageRecipeUri.isEmpty()) {
+            Toast.makeText(this, "Lengkapi resep anda!", Toast.LENGTH_LONG).show()
+            Log.d(
+                "Recipe Entity",
+                "etTitle: ${binding.etTitle.text.isBlank()}, etDesc: ${binding.etDescription.text.isBlank()}, imageView: ${imageRecipeUri.isEmpty()}"
+            )
+            return
+        }
+
+        if (checkStepCookValid(binding.llListStepCook) and checkIngredientValid(binding.listIngredients)) {
+            val recipeEntity = RecipeEntity(
+                id = null,
+                title = binding.etTitle.text.toString(),
+                description = binding.etDescription.text.toString(),
+                publisherId = "123456",
+                publisher = null,
+                recipePicture = imageRecipeUri.toString(),
+                listIngredients = listIngredients,
+                listStepCooking = listStepCook
+            )
+
+            addRecipeViewModel.addRecipe(recipeEntity)
         }
     }
 
@@ -65,9 +105,7 @@ class AddRecipeActivity : AppCompatActivity() {
         val btnAddImageStepCook =
             rowAddStepCookingView.findViewById<ImageView>(R.id.iv_add_image_step_cook)
 
-
         val indexRowAddStep = binding.llListStepCook.indexOfChild(rowAddStepCookingView)
-        Log.d("addStepCook", "Index row Add Step: $indexRowAddStep")
         btnAddImageStepCook.setOnClickListener {
             val setIdImageView =
                 "${Constants.REQUEST_CODE_ADD_STEP_COOK}${indexRowAddStep.twoDigitsFormat()}${flexibleListStepCook.childCount}".toInt()
@@ -154,13 +192,13 @@ class AddRecipeActivity : AppCompatActivity() {
                 stepCookingView.findViewById<FlexboxLayout>(R.id.list_image_step_cook)
 
             isNotEmpty = if (stepDescriptionView.isNotNullOrEmpty()) {
-                val stepImages = mutableListOf<Uri>()
+                val stepImages = mutableListOf<String>()
                 for (indexImageView in 0 until listStepImagesView.childCount) {
                     for (image in StepCookFunction.listStepCookImages) {
                         val imageView = listStepImagesView.getChildAt(indexImageView)
 
                         if (imageView.id.toString() == image.values.first().toString())
-                            stepImages.add(Uri.parse(image.values.last()))
+                            stepImages.add(image.values.last())
                     }
                 }
 
@@ -230,6 +268,7 @@ class AddRecipeActivity : AppCompatActivity() {
                     .load(uri)
                     .into(binding.imgRecipe)
 
+                imageRecipeUri = uri
             }
 
         } else if (resultCode == ImagePicker.RESULT_ERROR) {

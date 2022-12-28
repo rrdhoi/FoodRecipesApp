@@ -2,7 +2,6 @@ package com.jagoteori.foodrecipesapp.presentation.add_recipe
 
 import android.app.Activity
 import android.net.Uri
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -47,11 +46,6 @@ object StepCookFunction {
         val newImageView =
             stepImageViewGenerated(activity, requestCode)
 
-        Log.d(
-            "Adding Image Step",
-            "Uri : $uri"
-        )
-
         val getIndexRowAddStep = requestCode.toString().substring(3, 5)
 
         for (indexRowAddStep in 0 until parentView.childCount) {
@@ -60,35 +54,19 @@ object StepCookFunction {
             val flexibleListStepCook =
                 rowAddStepCookingView.findViewById<FlexboxLayout>(R.id.list_image_step_cook)
 
-            Log.d(
-                "Fixing Image nih boss",
-                "addIndexRowAddStep: $getIndexRowAddStep || indexRowAddStep: $indexRowAddStep"
-            )
             if (getIndexRowAddStep == indexRowAddStep.twoDigitsFormat()) {
                 flexibleListStepCook.addView(newImageView, flexibleListStepCook.childCount - 1)
             }
 
-            Log.d(
-                "btn add step",
-                "concat : ${requestCode}|| isi flexiblenya : ${flexibleListStepCook.childCount} || index parentView : $indexRowAddStep"
-            )
 
             for (indexFlexibleView in 0 until flexibleListStepCook.childCount) {
                 val getIdStepImageView =
                     "${Constants.REQUEST_CODE_ADD_STEP_COOK}${indexRowAddStep.twoDigitsFormat()}${indexFlexibleView}".toInt()
-                Log.d(
-                    "addrecipeActivity",
-                    "indexParent(${indexRowAddStep}) & indexFlexible(${indexFlexibleView})"
-                )
+
                 if (requestCode == getIdStepImageView) {
                     val getChildFlexible = flexibleListStepCook.getChildAt(indexFlexibleView - 1)
-                    Log.d(
-                        "on Activity Result:",
-                        "concat : $getIdStepImageView && requestCode: $requestCode"
-                    )
                     val imageView = getChildFlexible.findViewById<ImageView>(getIdStepImageView)
 
-                    Log.d("on Activity Result:", "imageView : ${imageView.id}")
                     Glide.with(activity)
                         .asBitmap()
                         .load(uri)

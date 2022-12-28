@@ -5,7 +5,6 @@ import com.jagoteori.foodrecipesapp.data.model.RecipeModel
 import com.jagoteori.foodrecipesapp.data.source.remote.firestore.FirestoreQuery
 import com.jagoteori.foodrecipesapp.data.source.remote.firestore.ResponseCallBack
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

@@ -114,8 +114,16 @@
             android:text="Submit"
             android:textAllCaps="false"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_add_step_cook"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/btn_add_step_cook"/>
 
+        <ImageView
+            android:id="@+id/img_test"
+            style="@style/marginFormAddRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:contentDescription="@string/image_recipe"
+            android:src="@drawable/ic_photo_camera_black_48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/btn_submit" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

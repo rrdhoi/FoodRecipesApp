@@ -6,12 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.jagoteori.foodrecipesapp.app.service.FirebaseService.Companion.token
 import com.jagoteori.foodrecipesapp.app.notification.NotificationData
 import com.jagoteori.foodrecipesapp.app.notification.PushNotification
+import com.jagoteori.foodrecipesapp.app.service.FirebaseService.Companion.token
 import com.jagoteori.foodrecipesapp.data.Resource
 import com.jagoteori.foodrecipesapp.databinding.HomeFragmentBinding
-import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
@@ -30,10 +29,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.token.text = token!!
-        dataRecipe()
+//        dataRecipe()
     }
 
-    private fun dataRecipe() {
+    /*private fun dataRecipe() {
         binding.getRecipeButton.setOnClickListener {
             homeViewModel.getRecipeById("S8pCNxc65IIKJMjxRccQ")
             homeViewModel.getRecipe.observe(viewLifecycleOwner) {
@@ -59,30 +58,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        binding.addButton.setOnClickListener {
-            val random = (1..100).random()
-            val recipe = RecipeEntity(
-                id = "",
-                title = "Chicken $random",
-                publisher = "JagoTeori $random",
-                recipePicture = "https://www.themealdb.com/images/media/meals/58oia61564916529.jpg",
-                description = " Chicken is the most common type of poultry in the world. Owing to the relative ease and low cost of raising them in comparison to animals such as cattle or hogs, chickens have become prevalent throughout the cuisine of cultures around the world, and their meat has been variously adapted to regional tastes.",
-            )
-            homeViewModel.addRecipe(recipe)
-            homeViewModel.addRecipe.observe(viewLifecycleOwner) {
-                when (it) {
-                    is Resource.Success -> {
-                        Log.d("Add Recipe ::", "dataRecipe: ${it.data}")
-                    }
-                    is Resource.Error -> {
-                        Log.d("Add Recipe ::", "dataRecipe: ${it.message}")
-                    }
-                    is Resource.Loading -> {
-                        Log.d("Add Recipe ::", "dataRecipe: Loading")
-                    }
-                }
-            }
-        }
+
         homeViewModel.allRecipes.observe(viewLifecycleOwner) { recipes ->
             when (recipes) {
                 is Resource.Loading -> {
@@ -97,7 +73,7 @@ class HomeFragment : Fragment() {
             }
 
         }
-    }
+    }*/
 
 
 }
