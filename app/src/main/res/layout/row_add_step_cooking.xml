@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <EditText
-        android:id="@+id/et_title_step_cook"
+        android:id="@+id/et_description_step_cook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -21,7 +21,7 @@
         app:flow_maxElementsWrap="3"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_title_step_cook">
+        app:layout_constraintTop_toBottomOf="@id/et_description_step_cook">
 
         <ImageView
             android:id="@+id/iv_add_image_step_cook"

@@ -6,10 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.res.ResourcesCompat
@@ -17,15 +14,22 @@ import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.flexbox.FlexboxLayout
 import com.jagoteori.foodrecipesapp.R
+import com.jagoteori.foodrecipesapp.app.Constants
 import com.jagoteori.foodrecipesapp.app.extention.isNotNullOrEmpty
+import com.jagoteori.foodrecipesapp.app.extention.length
+import com.jagoteori.foodrecipesapp.app.extention.twoDigitsFormat
 import com.jagoteori.foodrecipesapp.app.utils.imagePicker
 import com.jagoteori.foodrecipesapp.databinding.ActivityAddRecipeBinding
+import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
 import com.jagoteori.foodrecipesapp.domain.entity.ingredient.IngredientEntity
+
 
 class AddRecipeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddRecipeBinding
-    private val listIngredients: ArrayList<IngredientEntity> = ArrayList()
     private lateinit var spinnerListIngredient: Array<out String>
+
+    private val listIngredients: ArrayList<IngredientEntity> = ArrayList()
+    private val listStepCook: ArrayList<StepCookEntity> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,21 +39,24 @@ class AddRecipeActivity : AppCompatActivity() {
         spinnerListIngredient = resources.getStringArray(R.array.list_quantity)
         toolbarSetUp()
 
-        binding.btnAddIngredient.setOnClickListener { addIngredient() }
+        StepCookFunction.onActivityCreate()
+
+        binding.btnAddIngredient.setOnClickListener { addIngredientView(binding.listIngredients) }
         binding.imgRecipe.setOnClickListener { imagePicker(this, IMAGE_PICKER_ADD_RECIPE_CODE) }
-        binding.btnAddStepCook.setOnClickListener { addStepCook() }
+        binding.btnAddStepCook.setOnClickListener { addStepCookView() }
 
         binding.btnSubmit.setOnClickListener {
-            if (checkIngredientValidAndSubmit()) {
+            if (checkIngredientValid(binding.listIngredients) || checkStepCookValid(binding.llListStepCook)) {
+                Log.d("List Step Cook ::: ", "$listStepCook")
                 Log.d("List Ingredient ::: ", "$listIngredients")
             }
+
         }
     }
 
-
-    private fun addStepCook() {
+    private fun addStepCookView() {
         val rowAddStepCookingView =
-            layoutInflater.inflate(R.layout.row_add_step_cooking, null, false)
+            layoutInflater.inflate(R.layout.row_add_step_cooking, binding.root, false)
         binding.llListStepCook.addView(rowAddStepCookingView)
 
         val flexibleListStepCook =
@@ -60,26 +67,47 @@ class AddRecipeActivity : AppCompatActivity() {
 
 
         val indexRowAddStep = binding.llListStepCook.indexOfChild(rowAddStepCookingView)
-//        val indexFlexibleStepCook = flexibleListStepCook.indexOfChild()
         Log.d("addStepCook", "Index row Add Step: $indexRowAddStep")
         btnAddImageStepCook.setOnClickListener {
-            val concatTwoInt = "${indexRowAddStep}${flexibleListStepCook.childCount}".toInt()
-            val imageView =
-                StepCookFunction.stepImageViewGenerated(this@AddRecipeActivity, concatTwoInt)
-            flexibleListStepCook.addView(imageView)
-            Log.d(
-                "btn add step",
-                "concat : ${concatTwoInt}|| isi flexiblenya : ${flexibleListStepCook.childCount} || index parentView : ${indexRowAddStep}"
-            )
+            val setIdImageView =
+                "${Constants.REQUEST_CODE_ADD_STEP_COOK}${indexRowAddStep.twoDigitsFormat()}${flexibleListStepCook.childCount}".toInt()
+
+            imagePicker(activity = this, requestCode = setIdImageView, isGalleryOnly = true)
         }
     }
 
-    private fun checkIngredientValidAndSubmit(): Boolean {
-        listIngredients.clear()
-        var isNotEmpty = true
+    private fun addIngredientView(
+        listIngredientLayout: LinearLayout
+    ) {
+        val rowAddIngredientView =
+            layoutInflater.inflate(R.layout.row_add_ingredient, binding.root, false)
+        listIngredientLayout.addView(rowAddIngredientView)
 
-        for (index in 0 until binding.listIngredients.childCount) {
-            val ingredientView = binding.listIngredients.getChildAt(index)
+        val spinnerQuantity: AppCompatSpinner =
+            rowAddIngredientView.findViewById(R.id.spinner_quantity)
+        val btnDeleteIngredient =
+            rowAddIngredientView.findViewById<View>(R.id.btn_delete_ingredient)
+
+        val arrayAdapterIngredient = ArrayAdapter(
+            this,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            spinnerListIngredient
+        )
+
+        spinnerQuantity.adapter = arrayAdapterIngredient
+
+        btnDeleteIngredient.setOnClickListener {
+            listIngredientLayout.removeView(rowAddIngredientView)
+        }
+    }
+
+    // validasi form resep dan masukkan setiap value resep kedalam list
+    private fun checkIngredientValid(listIngredientLayout: LinearLayout): Boolean {
+        var isNotEmpty = false
+        listIngredients.clear()
+
+        for (index in 0 until listIngredientLayout.childCount) {
+            val ingredientView = listIngredientLayout.getChildAt(index)
 
             val etTitleIngredient = ingredientView.findViewById<EditText>(R.id.et_title_ingredient)
             val etQuantity = ingredientView.findViewById<EditText>(R.id.et_quantity)
@@ -103,7 +131,7 @@ class AddRecipeActivity : AppCompatActivity() {
             }
         }
 
-        if (binding.listIngredients.childCount == 0) {
+        if (listIngredientLayout.childCount == 0) {
             Toast.makeText(this, "Tambahkan bahan resep anda!", Toast.LENGTH_LONG).show()
         } else if (!isNotEmpty) {
             Toast.makeText(this, "Lengkapi bahan resep anda!", Toast.LENGTH_LONG).show()
@@ -112,26 +140,51 @@ class AddRecipeActivity : AppCompatActivity() {
         return isNotEmpty
     }
 
-    private fun addIngredient() {
-        val rowAddIngredientView = layoutInflater.inflate(R.layout.row_add_ingredient, null, false)
-        binding.listIngredients.addView(rowAddIngredientView)
+    // validasi form langkah memasak dan masukkan setiap value langkah memasak
+    // dengan gambar step kedalam list
+    private fun checkStepCookValid(listStepCookLayout: LinearLayout): Boolean {
+        var isNotEmpty = false
+        listStepCook.clear()
 
-        val spinnerQuantity: AppCompatSpinner =
-            rowAddIngredientView.findViewById(R.id.spinner_quantity)
-        val btnDeleteIngredient =
-            rowAddIngredientView.findViewById<View>(R.id.btn_delete_ingredient)
+        for (indexStepLayout in 0 until listStepCookLayout.childCount) {
+            val stepCookingView = listStepCookLayout.getChildAt(indexStepLayout)
+            val stepDescriptionView =
+                stepCookingView.findViewById<EditText>(R.id.et_description_step_cook)
+            val listStepImagesView =
+                stepCookingView.findViewById<FlexboxLayout>(R.id.list_image_step_cook)
 
-        val arrayAdapterIngredient = ArrayAdapter(
-            this,
-            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-            spinnerListIngredient
-        )
+            isNotEmpty = if (stepDescriptionView.isNotNullOrEmpty()) {
+                val stepImages = mutableListOf<Uri>()
+                for (indexImageView in 0 until listStepImagesView.childCount) {
+                    for (image in StepCookFunction.listStepCookImages) {
+                        val imageView = listStepImagesView.getChildAt(indexImageView)
 
-        spinnerQuantity.adapter = arrayAdapterIngredient
+                        if (imageView.id.toString() == image.values.first().toString())
+                            stepImages.add(Uri.parse(image.values.last()))
+                    }
+                }
 
-        btnDeleteIngredient.setOnClickListener {
-            binding.listIngredients.removeView(rowAddIngredientView)
+                val stepCookEntity = StepCookEntity(
+                    stepNumber = indexStepLayout,
+                    stepDescription = stepDescriptionView.text.toString(),
+                    stepImages = stepImages
+                )
+
+                listStepCook.add(stepCookEntity)
+
+                true
+            } else {
+                false
+            }
         }
+
+        if (listStepCookLayout.childCount == 0) {
+            Toast.makeText(this, "Tambahkan langkah memasak resep anda!", Toast.LENGTH_LONG).show()
+        } else if (!isNotEmpty) {
+            Toast.makeText(this, "Lengkapi langkah memasak anda!", Toast.LENGTH_LONG).show()
+        }
+
+        return isNotEmpty
     }
 
     private fun toolbarSetUp() {
@@ -153,19 +206,31 @@ class AddRecipeActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             val uri: Uri = data?.data!!
 
-            StepCookFunction.addingImageIntoStepCookView(
-                activity = this,
-                parentView = binding.llListStepCook,
-                requestCode = requestCode,
-                uri = uri
+            Log.d(
+                "Fixing Image nih boss",
+                "request Code: $requestCode"
             )
 
-            if (requestCode == IMAGE_PICKER_ADD_RECIPE_CODE)
+            if (requestCode.length() > 3 || Integer.parseInt(
+                    resultCode.toString().substring(0, 2)
+                ) == Constants.REQUEST_CODE_ADD_STEP_COOK.toInt()
+            ) {
+                StepCookFunction.addingImageIntoStepCookView(
+                    activity = this,
+                    parentView = binding.llListStepCook,
+                    requestCode = requestCode,
+                    uri = uri
+                )
+            }
+
+
+            if (requestCode == IMAGE_PICKER_ADD_RECIPE_CODE) {
                 Glide.with(this)
                     .asBitmap()
                     .load(uri)
                     .into(binding.imgRecipe)
 
+            }
 
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
