@@ -9,7 +9,7 @@ import com.jagoteori.foodrecipesapp.DummyData.notFoundRecipeMessage
 import com.jagoteori.foodrecipesapp.DummyData.recipeEntity
 import com.jagoteori.foodrecipesapp.DummyData.recipeModel
 import com.jagoteori.foodrecipesapp.DummyData.successMessage
-import com.jagoteori.foodrecipesapp.data.model.DataMapper
+import com.jagoteori.foodrecipesapp.app.utils.DataMapper
 import com.jagoteori.foodrecipesapp.data.model.RecipeModel
 import com.jagoteori.foodrecipesapp.data.source.remote.ApiResponse
 import com.jagoteori.foodrecipesapp.data.source.remote.RemoteDataSource

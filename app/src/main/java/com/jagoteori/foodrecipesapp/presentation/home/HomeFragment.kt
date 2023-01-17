@@ -1,79 +1,118 @@
 package com.jagoteori.foodrecipesapp.presentation.home
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import com.jagoteori.foodrecipesapp.app.notification.NotificationData
-import com.jagoteori.foodrecipesapp.app.notification.PushNotification
-import com.jagoteori.foodrecipesapp.app.service.FirebaseService.Companion.token
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.android.material.tabs.TabLayoutMediator
+import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.data.Resource
 import com.jagoteori.foodrecipesapp.databinding.HomeFragmentBinding
+import com.jagoteori.foodrecipesapp.databinding.ItemRecommendationRecipeBinding
+import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
+import com.jagoteori.foodrecipesapp.presentation.adapter.GenericListAdapter
+import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by viewModel()
     private lateinit var binding: HomeFragmentBinding
-
+    private lateinit var recommendationRecipeAdapter: GenericListAdapter<RecipeEntity>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Timber.plant(Timber.DebugTree())
         binding = HomeFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.token.text = token!!
-//        dataRecipe()
+
+        setUpListAdapter()
+        showRecyclerList()
+        observeRecipes()
     }
 
-    /*private fun dataRecipe() {
-        binding.getRecipeButton.setOnClickListener {
-            homeViewModel.getRecipeById("S8pCNxc65IIKJMjxRccQ")
-            homeViewModel.getRecipe.observe(viewLifecycleOwner) {
-                when (it) {
-                    is Resource.Success -> {
-                        Log.d("Get Recipe Id ::", "dataRecipe: ${it.data}")
-                        homeViewModel.sendNotification(
-                            PushNotification(
-                                data = NotificationData(
-                                    title = it.data?.title!!,
-                                    message = it.data.publisher!!
-                                ),
-                                to = "dwE5gPxnRDKkw74vX7mnWk:APA91bGcMGez-Fez45EHHRFMtX7aoPJar9-vOEUI4HjUVKr_68irr_bPRxzIBH18DWSez8r_uoutWkuYZSiBPHkfnqrgKrEV3C1zctKcJ1imBC12uEjAaA51C55OpWF0pmbCrjp6MepY"
-                            )
-                        )
-                    }
-                    is Resource.Error -> {
-                        Log.d("Get Recipe Id ::", "dataRecipe: ${it.message}")
-                    }
-                    is Resource.Loading -> {
-                        Log.d("Get Recipe Id ::", "dataRecipe: Loading")
-                    }
+    private fun setTabLayout(listRecipe: List<RecipeEntity>) {
+        val viewPager = binding.viewPager
+        viewPager.isUserInputEnabled = false
+
+        val sectionsPagerAdapter = SectionsPagerCategoryAdapter(requireActivity(), listRecipe)
+        viewPager.adapter = sectionsPagerAdapter
+
+        TabLayoutMediator(binding.tabs, viewPager) { tab, position ->
+            tab.text = resources.getStringArray(R.array.tab_category)[position]
+        }.attach()
+
+        val tabs = binding.tabs.getChildAt(0) as ViewGroup
+
+        for (index in 0 until tabs.childCount) {
+            Timber.d("ikang :: $index")
+            val tab = tabs.getChildAt(index)
+            val layoutParams =  tab.layoutParams as LinearLayout.LayoutParams
+            layoutParams.marginEnd = 30
+        }
+        binding.tabs.requestLayout()
+    }
+
+    private fun setUpListAdapter() {
+        recommendationRecipeAdapter = @SuppressLint("ResourceType")
+        object : GenericListAdapter<RecipeEntity>(
+            R.layout.item_recommendation_recipe,
+            bind = { item, holder, _ ->
+                val binding = ItemRecommendationRecipeBinding.bind(holder.itemView)
+                with(binding) {
+                    tvTitleRecipe.text = item.title
+                    tvPublisher.text = item.publisher
+                    Glide.with(requireActivity()).asBitmap().load(item.recipePicture)
+                        .into(imgRecipe)
+                }
+
+                holder.itemView.setOnClickListener {
+                    val intent = Intent(context, DetailRecipeActivity::class.java).putExtra(
+                        DetailRecipeActivity.DATA_RECIPE,
+                        item
+                    )
+                    startActivity(intent)
                 }
             }
-        }
+        ) {}
+    }
 
+    private fun showRecyclerList() {
+        with(binding.rvRecommendationRecipe) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = recommendationRecipeAdapter
+        }
+    }
+
+
+    private fun observeRecipes() {
         homeViewModel.allRecipes.observe(viewLifecycleOwner) { recipes ->
             when (recipes) {
                 is Resource.Loading -> {
-                    Log.d("Home Fragment ::", "dataRecipe: Loading")
+                    Timber.tag("Home Fragment ::").d("dataRecipe: Loading")
                 }
                 is Resource.Success -> {
-                    Log.d("Home Fragment ::", "dataRecipe: ${recipes.data}")
+                    recipes.data?.let { setTabLayout(it) }
+                    recommendationRecipeAdapter.submitList(recipes.data)
+                    Timber.tag("Home Fragment ::").d("dataRecipe: ${recipes.data}")
                 }
                 is Resource.Error -> {
-                    Log.d("Home Fragment ::", "dataRecipe: Error ${recipes.message}")
+                    Timber.tag("Home Fragment ::").d("dataRecipe: Error %s", recipes.message)
                 }
             }
-
         }
-    }*/
-
+    }
 
 }

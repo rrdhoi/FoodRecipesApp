@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="defaultMarginLeft" type="dimen">24dp</item>
+    <item name="defaultMarginRight" type="dimen">24dp</item>
+</resources>

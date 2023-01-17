@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/card_step_cook"
+    android:layout_marginBottom="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <EditText
         android:id="@+id/et_description_step_cook"
@@ -10,7 +12,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:inputType="textMultiLine"
-        android:hint="Masukkan langkah memasak resep kamu"
+        android:background="@drawable/background_form_field"
+        android:importantForAutofill="no"
+        android:padding="14dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="12dp"
+        android:hint="Langkah memasak resep kamu"
         />
 
     <com.google.android.flexbox.FlexboxLayout
@@ -23,14 +30,23 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_description_step_cook">
 
-        <ImageView
-            android:id="@+id/iv_add_image_step_cook"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_add_image_step_cook"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_photo_camera_black_48dp"
-            android:contentDescription="Add Photo Step"
             app:layout_flexBasisPercent="33%"
-            />
+            app:cardCornerRadius="8dp"
+            android:layout_margin="12dp"
+            >
+            <ImageView
+                android:id="@+id/iv_add_image_step_cook"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_baseline_add_photo_alternate_24"
+                android:contentDescription="Add Photo Step"
+                />
+        </androidx.cardview.widget.CardView>
 
     </com.google.android.flexbox.FlexboxLayout>
 

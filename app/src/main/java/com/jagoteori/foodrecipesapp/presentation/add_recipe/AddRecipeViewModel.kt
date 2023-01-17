@@ -14,9 +14,7 @@ class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
     private val _addRecipe = MutableLiveData<Resource<String>>()
     val addRecipe: LiveData<Resource<String>> get() = _addRecipe
 
-    fun addRecipe(recipeEntity: RecipeEntity) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _addRecipe.postValue(useCase.addRecipe(recipeEntity))
-        }
+    fun addRecipe(recipeEntity: RecipeEntity) = viewModelScope.launch(Dispatchers.Main) {
+        _addRecipe.postValue(useCase.addRecipe(recipeEntity))
     }
 }

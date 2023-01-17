@@ -1,129 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".presentation.add_recipe.AddRecipeActivity">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_add_recipe"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            android:paddingLeft="9dp"
-            android:paddingRight="9dp"
-            android:theme="?attr/actionBarTheme"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/img_recipe"
-            style="@style/marginFormAddRecipe"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:contentDescription="@string/image_recipe"
-            android:src="@drawable/ic_photo_camera_black_48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_add_recipe" />
-
-        <EditText
-            android:id="@+id/et_title"
-            style="@style/marginFormAddRecipe"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="no"
-            android:hint="Masukkan judul resep kamu"
-            android:inputType="text"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/img_recipe" />
+            android:background="@color/black"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <EditText
-            android:id="@+id/et_description"
-            style="@style/marginFormAddRecipe"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_add_recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:paddingLeft="9dp"
+                android:paddingRight="9dp"
+                app:layout_collapseMode="pin"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Masukkan deskripsi resep kamu"
-            android:importantForAutofill="no"
-            android:inputType="textMultiLine"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_title" />
+            tools:context=".presentation.add_recipe.AddRecipeActivity">
 
-        <LinearLayout
-            android:id="@+id/list_ingredients"
-            style="@style/marginFormAddRecipe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_description" />
+            <ImageView
+                android:id="@+id/img_recipe"
+                style="@style/marginFormAddRecipe"
+                android:background="@drawable/background_form_field"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:contentDescription="@string/image_recipe"
+                android:src="@drawable/ic_baseline_add_photo_alternate_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_add_ingredient"
-            style="@style/marginFormAddRecipe"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:drawableStart="@drawable/ic_add_recipe"
-            android:drawablePadding="8dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:text="Tambah bahan untuk resep"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_ingredients" />
+            <EditText
+                android:id="@+id/et_title"
+                style="@style/marginFormAddRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="no"
+                android:background="@drawable/background_form_field"
+                android:hint="Masukkan judul resep kamu"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:padding="14dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey_300"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/img_recipe" />
 
-        <LinearLayout
-            android:id="@+id/ll_list_step_cook"
-            style="@style/marginFormAddRecipe"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_add_ingredient" />
+            <EditText
+                android:id="@+id/et_category"
+                style="@style/marginFormAddRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_form_field"
+                android:hint="Masukkan kategori resep kamu"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:padding="14dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey_300"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_title" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_add_step_cook"
-            style="@style/marginFormAddRecipe"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginBottom="30dp"
-            android:drawablePadding="8dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:text="Tambah langkah"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ll_list_step_cook"
-            />
+            <EditText
+                android:id="@+id/et_description"
+                style="@style/marginFormAddRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_form_field"
+                android:hint="Masukkan deskripsi resep kamu"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:padding="14dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey_300"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_category" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_submit"
-            style="@style/marginFormAddRecipe"
-            android:layout_marginTop="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginBottom="30dp"
-            android:drawablePadding="8dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:text="Submit"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_add_step_cook"/>
+            <TextView
+                android:id="@+id/tv_ingredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/defaultMarginLeft"
+                android:layout_marginTop="@dimen/defaultMarginLeft"
+                android:text="Bahan-Bahan"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_description" />
 
-        <ImageView
-            android:id="@+id/img_test"
-            style="@style/marginFormAddRecipe"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:contentDescription="@string/image_recipe"
-            android:src="@drawable/ic_photo_camera_black_48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/btn_submit" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+            <LinearLayout
+                android:id="@+id/list_ingredients"
+                style="@style/marginFormAddRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_ingredients">
+
+                <include layout="@layout/row_add_ingredient" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add_ingredient"
+                style="@style/marginFormAddRecipe"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:drawableStart="@drawable/ic_add_recipe"
+                android:drawablePadding="8dp"
+                android:background="@drawable/background_button"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:textColor="@color/grey"
+                android:text="Tambah bahan untuk resep"
+                android:textAllCaps="false"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/list_ingredients" />
+
+            <TextView
+                android:id="@+id/tv_step_cook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/defaultMarginLeft"
+                android:layout_marginTop="30dp"
+                android:text="Langkah Memasak"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_add_ingredient" />
+
+            <LinearLayout
+                android:id="@+id/ll_list_step_cook"
+                style="@style/marginFormAddRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_step_cook" >
+                <include layout="@layout/row_add_step_cooking"/>
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add_step_cook"
+                style="@style/marginFormAddRecipe"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginBottom="30dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_add_recipe"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="Tambah langkah memasak"
+                android:background="@drawable/background_button"
+                android:textColor="@color/grey"
+                android:textAllCaps="false"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_list_step_cook" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_submit"
+                style="@style/marginFormAddRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="30dp"
+                android:drawablePadding="8dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="Submit"
+                android:textColor="@color/grey"
+                android:background="@drawable/background_button"
+                android:textAllCaps="false"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_add_step_cook"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

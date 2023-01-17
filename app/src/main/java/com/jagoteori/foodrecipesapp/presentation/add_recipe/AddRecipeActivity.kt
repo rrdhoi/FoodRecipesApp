@@ -5,16 +5,17 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.get
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.flexbox.FlexboxLayout
-import com.google.firebase.storage.FirebaseStorage
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.app.Constants
 import com.jagoteori.foodrecipesapp.app.extention.isEmpty
@@ -24,9 +25,9 @@ import com.jagoteori.foodrecipesapp.app.extention.twoDigitsFormat
 import com.jagoteori.foodrecipesapp.app.utils.imagePicker
 import com.jagoteori.foodrecipesapp.data.Resource
 import com.jagoteori.foodrecipesapp.databinding.ActivityAddRecipeBinding
+import com.jagoteori.foodrecipesapp.domain.entity.IngredientEntity
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
-import com.jagoteori.foodrecipesapp.domain.entity.ingredient.IngredientEntity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -42,9 +43,10 @@ class AddRecipeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddRecipeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        spinnerListIngredient = resources.getStringArray(R.array.list_quantity)
+        setContentView(binding.root)
+        setUpIngredients()
+        setUpStepCook()
         toolbarSetUp()
 
         StepCookFunction.onActivityCreate()
@@ -53,28 +55,65 @@ class AddRecipeActivity : AppCompatActivity() {
         binding.imgRecipe.setOnClickListener { imagePicker(this, IMAGE_PICKER_ADD_RECIPE_CODE) }
         binding.btnAddStepCook.setOnClickListener { addStepCookView() }
 
-        binding.btnSubmit.setOnClickListener { submitRecipe()}
+        binding.btnSubmit.setOnClickListener { submitRecipe() }
 
         addRecipeViewModel.addRecipe.observe(this) {
-            when(it) {
+            when (it) {
                 is Resource.Success -> {
-                    Log.d("Success Upload Recipe", it.data.toString())
+                    finish()
+                    Toast.makeText(this, "Upload resep berhasil!", Toast.LENGTH_LONG).show()
                 }
                 is Resource.Error -> {
-                    Log.d("Error Upload Recipe", it.message.toString())
+                    Toast.makeText(this, "Upload resep gagal!", Toast.LENGTH_LONG).show()
                 }
+                else -> {}
             }
         }
     }
 
+    private fun setUpIngredients() {
+        // remove first view button delete ingredient
+        val rowAddIngredientView = binding.listIngredients[0] as ConstraintLayout
+        val btnDelete = rowAddIngredientView.findViewById<CardView>(R.id.card_btn_delete)
+        rowAddIngredientView.removeView(btnDelete)
+
+        setUpSpinnerIngredients()
+    }
+
+    private fun setUpStepCook() {
+        val flexibleListStepCook =
+            binding.llListStepCook[0].findViewById<FlexboxLayout>(R.id.list_image_step_cook)
+
+        val btnAddImageStepCook =
+            flexibleListStepCook.findViewById<CardView>(R.id.card_add_image_step_cook)
+
+        btnAddImageStepCook.setOnClickListener {
+            val setIdImageView =
+                "${Constants.REQUEST_CODE_ADD_STEP_COOK}00${flexibleListStepCook.childCount}".toInt()
+
+            imagePicker(activity = this, requestCode = setIdImageView, isGalleryOnly = true)
+        }
+    }
+
+    private fun setUpSpinnerIngredients() {
+        spinnerListIngredient = resources.getStringArray(R.array.list_quantity)
+        val arrayAdapterIngredient = ArrayAdapter(
+            this,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            spinnerListIngredient
+        )
+        binding.listIngredients[0].findViewById<Spinner>(R.id.spinner_quantity).adapter =
+            arrayAdapterIngredient
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun submitRecipe() {
-        if (binding.etTitle.text.isBlank() or binding.etDescription.text.isBlank() or imageRecipeUri.isEmpty()) {
+        if (binding.etTitle.text.isBlank() and
+            binding.etDescription.text.isNullOrBlank() and
+            imageRecipeUri.isEmpty() and
+            binding.etCategory.text.isNullOrBlank()
+        ) {
             Toast.makeText(this, "Lengkapi resep anda!", Toast.LENGTH_LONG).show()
-            Log.d(
-                "Recipe Entity",
-                "etTitle: ${binding.etTitle.text.isBlank()}, etDesc: ${binding.etDescription.text.isBlank()}, imageView: ${imageRecipeUri.isEmpty()}"
-            )
             return
         }
 
@@ -82,12 +121,14 @@ class AddRecipeActivity : AppCompatActivity() {
             val recipeEntity = RecipeEntity(
                 id = null,
                 title = binding.etTitle.text.toString(),
+                category = binding.etCategory.text.toString(),
                 description = binding.etDescription.text.toString(),
                 publisherId = "123456",
-                publisher = null,
+                publisher = "dyland",
                 recipePicture = imageRecipeUri.toString(),
                 listIngredients = listIngredients,
-                listStepCooking = listStepCook
+                listStepCooking = listStepCook,
+                listComments = null
             )
 
             addRecipeViewModel.addRecipe(recipeEntity)
@@ -103,7 +144,7 @@ class AddRecipeActivity : AppCompatActivity() {
             rowAddStepCookingView.findViewById<FlexboxLayout>(R.id.list_image_step_cook)
 
         val btnAddImageStepCook =
-            rowAddStepCookingView.findViewById<ImageView>(R.id.iv_add_image_step_cook)
+            flexibleListStepCook.findViewById<CardView>(R.id.card_add_image_step_cook)
 
         val indexRowAddStep = binding.llListStepCook.indexOfChild(rowAddStepCookingView)
         btnAddImageStepCook.setOnClickListener {
@@ -230,10 +271,10 @@ class AddRecipeActivity : AppCompatActivity() {
             navigationIcon =
                 ResourcesCompat.getDrawable(
                     resources,
-                    com.google.android.material.R.drawable.material_ic_clear_black_24dp,
+                    R.drawable.ic_baseline_clear_24,
                     null
                 )
-            setNavigationOnClickListener { onBackPressed() }
+            setNavigationOnClickListener { finish() }
         }
     }
 
@@ -243,11 +284,6 @@ class AddRecipeActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             val uri: Uri = data?.data!!
-
-            Log.d(
-                "Fixing Image nih boss",
-                "request Code: $requestCode"
-            )
 
             if (requestCode.length() > 3 || Integer.parseInt(
                     resultCode.toString().substring(0, 2)

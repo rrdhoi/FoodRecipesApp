@@ -1,14 +1,20 @@
 package com.jagoteori.foodrecipesapp.presentation.add_recipe
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.net.Uri
+import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
+import androidx.core.view.get
 import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexboxLayout
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.app.Constants
+import com.jagoteori.foodrecipesapp.app.extention.margin
 import com.jagoteori.foodrecipesapp.app.extention.twoDigitsFormat
 
 object StepCookFunction {
@@ -19,20 +25,19 @@ object StepCookFunction {
         setListStepCookImages.clear()
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun stepImageViewGenerated(activity: Activity, id: Int): ImageView {
         val imageView = ImageView(activity)
-        val imageParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
+        imageView.layoutParams =
+            LinearLayout.LayoutParams(180, 180)
 
+        imageView.margin(46, 32,0,24)
+        imageView.background = activity.resources.getDrawable(R.drawable.rounded_image_step_cook)
+        imageView.clipToOutline = true
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
         imageView.id = id
-        imageView.setImageResource(com.github.dhaval2404.imagepicker.R.drawable.ic_photo_camera_black_48dp)
-        imageView.layoutParams = imageParams
 
-        imageView.setOnClickListener {
-
-        }
+        imageView.setOnClickListener {}
 
         return imageView
     }
@@ -54,8 +59,12 @@ object StepCookFunction {
             val flexibleListStepCook =
                 rowAddStepCookingView.findViewById<FlexboxLayout>(R.id.list_image_step_cook)
 
+            val btnAddImageStepCook =
+                flexibleListStepCook.findViewById<CardView>(R.id.card_add_image_step_cook)
+
             if (getIndexRowAddStep == indexRowAddStep.twoDigitsFormat()) {
                 flexibleListStepCook.addView(newImageView, flexibleListStepCook.childCount - 1)
+                Log.e("count", "${flexibleListStepCook.childCount}")
             }
 
 
@@ -71,6 +80,11 @@ object StepCookFunction {
                         .asBitmap()
                         .load(uri)
                         .into(imageView)
+
+                    if (flexibleListStepCook.childCount == 4) {
+                        flexibleListStepCook.removeView(btnAddImageStepCook)
+                        Log.e("count after", "${flexibleListStepCook.childCount}")
+                    }
 
                     setListStepCookImages.add(
                         mapOf(
