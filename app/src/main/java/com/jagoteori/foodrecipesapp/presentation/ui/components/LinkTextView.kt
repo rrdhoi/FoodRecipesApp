@@ -1,4 +1,4 @@
-package com.jagoteori.foodrecipesapp.presentation.components
+package com.jagoteori.foodrecipesapp.presentation.ui.components
 
 import android.content.Context
 import android.text.SpannableString

@@ -120,7 +120,7 @@
                     android:textColor="@color/grey_500"
                     android:textSize="14sp" />
 
-                <com.jagoteori.foodrecipesapp.presentation.components.LinkTextView
+                <com.jagoteori.foodrecipesapp.presentation.ui.components.LinkTextView
                     android:id="@+id/btn_goto_signup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
