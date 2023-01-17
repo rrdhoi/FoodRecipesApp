@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.MaterialTheme
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.data.Resource
 import com.jagoteori.foodrecipesapp.databinding.FragmentMyRecipesBinding
@@ -16,6 +16,7 @@ import com.jagoteori.foodrecipesapp.databinding.ItemMyRecipeBinding
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.presentation.adapter.GenericListAdapter
 import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeActivity
+import com.jagoteori.foodrecipesapp.presentation.ui.components.ItemCategoryCard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyRecipesFragment : Fragment() {
@@ -39,8 +40,7 @@ class MyRecipesFragment : Fragment() {
 
         binding.ivBack.setOnClickListener {
             val fragmentManager = parentFragmentManager
-
-            fragmentManager.popBackStack();
+            fragmentManager.popBackStack()
         }
     }
 
@@ -50,19 +50,21 @@ class MyRecipesFragment : Fragment() {
             R.layout.item_my_recipe,
             bind = { item, holder, _ ->
                 val binding = ItemMyRecipeBinding.bind(holder.itemView)
-                with(binding) {
-                    tvTitle.text = item.title
-                    tvDesc.text = item.description
-                    Glide.with(requireActivity()).asBitmap().load(item.recipePicture)
-                        .into(ivRecipe)
-                }
 
-                holder.itemView.setOnClickListener {
-                    val intent = Intent(context, DetailRecipeActivity::class.java).putExtra(
-                        DetailRecipeActivity.DATA_RECIPE,
-                        item
-                    )
-                    startActivity(intent)
+                binding.composeView.setContent {
+                    MaterialTheme {
+                        ItemCategoryCard(
+                            title = item.title,
+                            publisher = item.publisher,
+                            imageRecipe = item.recipePicture
+                        ) {
+                            val intent = Intent(context, DetailRecipeActivity::class.java).putExtra(
+                                DetailRecipeActivity.DATA_RECIPE,
+                                item
+                            )
+                            startActivity(intent)
+                        }
+                    }
                 }
             }
         ) {}

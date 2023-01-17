@@ -38,8 +38,9 @@ class FirestoreQuery(
     override fun getRecipeById(recipeId: String) =
         firestore.collection("recipes").document(recipeId).get()
 
-    override fun getMyRecipes() =
-        firestore.collection("recipes").whereEqualTo("publisherId", firebaseAuth.uid).get()
+    override fun getMyRecipes(): Task<QuerySnapshot> =
+        firestore.collection("recipes").whereEqualTo("publisherId", firebaseAuth.uid)
+            .get()
 
     override fun getMyUser() =
         firestore.collection("users").document(firebaseAuth.uid!!).get()

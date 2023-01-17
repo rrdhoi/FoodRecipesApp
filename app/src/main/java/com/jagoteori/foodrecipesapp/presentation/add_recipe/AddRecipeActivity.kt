@@ -16,6 +16,7 @@ import androidx.core.view.get
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.flexbox.FlexboxLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.app.Constants
 import com.jagoteori.foodrecipesapp.app.extention.isEmpty
@@ -28,12 +29,14 @@ import com.jagoteori.foodrecipesapp.databinding.ActivityAddRecipeBinding
 import com.jagoteori.foodrecipesapp.domain.entity.IngredientEntity
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
+import com.jagoteori.foodrecipesapp.domain.entity.UserEntity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AddRecipeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddRecipeBinding
     private lateinit var spinnerListIngredient: Array<out String>
+    private lateinit var myUserEntity: UserEntity
     private val addRecipeViewModel: AddRecipeViewModel by viewModel()
 
     private var imageRecipeUri: Uri = Uri.EMPTY
@@ -57,14 +60,33 @@ class AddRecipeActivity : AppCompatActivity() {
 
         binding.btnSubmit.setOnClickListener { submitRecipe() }
 
+        viewModelObserve()
+    }
+
+    private fun viewModelObserve() {
         addRecipeViewModel.addRecipe.observe(this) {
             when (it) {
+                is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Resource.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     finish()
                     Toast.makeText(this, "Upload resep berhasil!", Toast.LENGTH_LONG).show()
                 }
                 is Resource.Error -> {
+                    binding.progressBar.visibility = View.GONE
                     Toast.makeText(this, "Upload resep gagal!", Toast.LENGTH_LONG).show()
+                }
+                else -> {}
+            }
+        }
+
+        addRecipeViewModel.myUser.observe(this) {
+            when (it) {
+                is Resource.Success -> {
+                    myUserEntity = it.data!!
+                }
+                is Resource.Error -> {
+                    Toast.makeText(this, "Gagal memuat server, coba lagi!!", Toast.LENGTH_LONG).show()
                 }
                 else -> {}
             }
@@ -123,8 +145,8 @@ class AddRecipeActivity : AppCompatActivity() {
                 title = binding.etTitle.text.toString(),
                 category = binding.etCategory.text.toString(),
                 description = binding.etDescription.text.toString(),
-                publisherId = "123456",
-                publisher = "dyland",
+                publisherId = myUserEntity.userId,
+                publisher = myUserEntity.name,
                 recipePicture = imageRecipeUri.toString(),
                 listIngredients = listIngredients,
                 listStepCooking = listStepCook,

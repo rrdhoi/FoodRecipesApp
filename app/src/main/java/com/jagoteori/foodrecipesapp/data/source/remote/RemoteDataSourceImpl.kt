@@ -46,7 +46,7 @@ class RemoteDataSourceImpl(private val firestore: FirestoreQuery) : RemoteDataSo
         withContext(Dispatchers.IO) {
             safeCall {
                 val response = firestore.getMyRecipes().await()
-                if (response != null && response.isEmpty) {
+                if (response != null && !response.isEmpty) {
                     val myListRecipes = response.toObjects(RecipeModel::class.java)
                     if (myListRecipes.isEmpty()) ApiResponse.Empty
                     else ApiResponse.Success(myListRecipes)

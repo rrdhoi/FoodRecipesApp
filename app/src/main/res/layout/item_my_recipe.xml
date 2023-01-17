@@ -5,58 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_recipe"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="12dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription"
-        tools:src="@drawable/ic_launcher_foreground" />
-
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="0dp"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/tv_desc"
-        app:layout_constraintEnd_toStartOf="@id/ib_delete"
-        app:layout_constraintStart_toEndOf="@id/iv_recipe"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="Judul"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/tv_desc"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/iv_recipe"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
-        app:layout_constraintRight_toLeftOf="@id/ib_delete"
-        tools:text="Status" />
-
-    <ImageButton
-        android:id="@+id/ib_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/ic_home"
-        app:layout_constraintStart_toEndOf="@id/tv_title"
-        app:layout_constraintTop_toTopOf="@id/iv_recipe"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/iv_recipe"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
