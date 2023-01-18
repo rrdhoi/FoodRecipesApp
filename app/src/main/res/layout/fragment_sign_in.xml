@@ -29,61 +29,14 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
 
-            <TextView
-                android:id="@+id/tv_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Email Address"
-                android:textColor="@color/grey_500"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/et_email"
-                style="@style/TextView.14grey300"
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/composeView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Masukkan Email Address kamu"
-                android:importantForAutofill="no"
-                android:background="@drawable/background_form_field"
-                android:padding="14dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/grey_300"
-                android:layout_marginTop="6dp"
-                android:inputType="textEmailAddress"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_email" />
-
-            <TextView
-                android:id="@+id/tv_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Password"
-                android:textColor="@color/grey_500"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_email" />
-
-            <EditText
-                android:id="@+id/et_password"
-                style="@style/TextView.14grey300"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Masukkan password kamu"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:background="@drawable/background_form_field"
-                android:padding="14dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/grey_300"
-                android:layout_marginTop="6dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_password" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_sign_in"
@@ -99,7 +52,7 @@
                 android:layout_marginTop="60dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_password" />
+                app:layout_constraintTop_toBottomOf="@id/composeView" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

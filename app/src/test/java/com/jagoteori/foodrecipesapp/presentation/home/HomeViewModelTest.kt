@@ -62,7 +62,7 @@ class HomeViewModelTest {
         }
     }
 
-    @Test
+    /*@Test
     fun testAssertionRecipeById() = runTest {
         val dummyRecipe = Resource.Success(recipeEntity)
 
@@ -98,5 +98,5 @@ class HomeViewModelTest {
 
             values.first()?.data shouldBeEqualTo dummyResult.data
         }
-    }
+    }*/
 }

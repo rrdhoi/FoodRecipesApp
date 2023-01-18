@@ -5,15 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.fragment.app.Fragment
 import com.jagoteori.foodrecipesapp.AuthActivity
 import com.jagoteori.foodrecipesapp.AuthActivity.Companion.PAGE_AUTH_SIGNUP
 import com.jagoteori.foodrecipesapp.MainActivity
-import com.jagoteori.foodrecipesapp.app.extention.isEmailFormat
-import com.jagoteori.foodrecipesapp.app.extention.isNotNullOrEmpty
 import com.jagoteori.foodrecipesapp.app.utils.firebaseAuthHandler
 import com.jagoteori.foodrecipesapp.data.Resource
 import com.jagoteori.foodrecipesapp.databinding.FragmentSignInBinding
+import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomTextField
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -33,6 +37,12 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.composeView.setContent {
+            MaterialTheme {
+                FormSignIn(modifier = Modifier)
+            }
+        }
+
         whenButtonSignUpClicked()
         submitRegistrationData()
         observeSignInUser()
@@ -49,25 +59,34 @@ class SignInFragment : Fragment() {
     private fun submitRegistrationData() {
         with(binding) {
             btnSignIn.setOnClickListener {
-                if (checkFormValid()) {
-                    viewModel.login(etEmail.text.toString(), etPassword.text.toString())
-                } else {
-                    Timber.d("Terjadi kesalahan")
+                if (viewModel.checkFormIsValid()) {
+                    viewModel.login()
                 }
             }
         }
     }
 
-    private fun checkFormValid(): Boolean {
-        with(binding) {
-            if (etEmail.isNotNullOrEmpty("Silahkan isi email anda") and
-                etPassword.isNotNullOrEmpty("Silahkan isi password anda") and
-                etEmail.isEmailFormat("Masukkan format email dengan benar")
-            ) {
-                return true
-            }
+    @Composable
+    fun FormSignIn(modifier: Modifier) {
+        Column {
+            CustomTextField(
+                title = "Email",
+                modifier = modifier,
+                value = viewModel.email,
+                onValueChange = { viewModel.email = it },
+                isError = viewModel.emailError,
+                errorMessage = viewModel.emailErrorMessage
+            )
+
+            CustomTextField(
+                title = "Password",
+                modifier = modifier,
+                value = viewModel.password,
+                onValueChange = { viewModel.password = it },
+                isError = viewModel.passwordError,
+                errorMessage = viewModel.passwordErrorMessage
+            )
         }
-        return false
     }
 
     private fun observeSignInUser() {

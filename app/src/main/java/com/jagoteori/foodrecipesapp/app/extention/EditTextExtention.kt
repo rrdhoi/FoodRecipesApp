@@ -11,8 +11,26 @@ fun EditText.isNotNullOrEmpty(errorString: String): Boolean {
     }
 }
 
-fun EditText.isEmailFormat(errorString: String) : Boolean {
-    return if (!this.text.toString().contains("@")){
+fun Boolean.errorHandler(
+    whenIsError: () -> Unit,
+): Boolean = if (this) {
+    whenIsError()
+    true
+} else {
+    false
+}
+
+fun Boolean.successHandler(
+    whenIsSuccess: () -> Unit,
+): Boolean = if (!this) {
+    whenIsSuccess()
+    false
+} else {
+    true
+}
+
+fun EditText.isEmailFormat(errorString: String): Boolean {
+    return if (!this.text.toString().contains("@")) {
         this.error = errorString
         false
     } else {
@@ -20,8 +38,8 @@ fun EditText.isEmailFormat(errorString: String) : Boolean {
     }
 }
 
-fun EditText.isPasswordEquals(secondPassword:EditText, errorString: String) : Boolean {
-    return if (this.text.toString() != secondPassword.text.toString()){
+fun EditText.isPasswordEquals(secondPassword: EditText, errorString: String): Boolean {
+    return if (this.text.toString() != secondPassword.text.toString()) {
         this.error = errorString
         secondPassword.error = errorString
         false

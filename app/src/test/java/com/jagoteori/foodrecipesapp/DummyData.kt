@@ -16,6 +16,11 @@ object DummyData {
             title = "testTitle",
             publisher = "testPublisher",
             recipePicture = "testRecipePicture",
+            listStepCooking = null,
+            listIngredients = null,
+            category = null,
+            publisherId = null,
+            listComments = null
         )
     )
 
@@ -26,6 +31,11 @@ object DummyData {
             title = "testTitle",
             publisher = "testPublisher",
             recipePicture = "testRecipePicture",
+            listStepCooking = null,
+            listIngredients = null,
+            category = null,
+            publisherId = null,
+            listComments = null
         )
     )
 
@@ -35,6 +45,11 @@ object DummyData {
         title = "testTitle",
         publisher = "testPublisher",
         recipePicture = "testRecipePicture",
+        listStepCooking = null,
+        listIngredients = null,
+        category = null,
+        publisherId = null,
+        listComments = null
     )
 
     val recipeModel = RecipeModel(
@@ -43,5 +58,10 @@ object DummyData {
         title = "testTitle",
         publisher = "testPublisher",
         recipePicture = "testRecipePicture",
+        listStepCooking = null,
+        listIngredients = null,
+        category = null,
+        publisherId = null,
+        listComments = null
     )
 }
