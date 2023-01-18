@@ -1,10 +1,7 @@
 package com.jagoteori.foodrecipesapp.presentation.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -30,7 +27,7 @@ fun ItemCategoryCard(
     imageRecipe: String?,
     itemOnClick: () -> Unit,
 ) {
-    ConstraintLayout(modifier = Modifier.clickable { itemOnClick() }) {
+    ConstraintLayout(modifier = Modifier.fillMaxSize().clickable { itemOnClick() }) {
         val (idImageRecipe, idTitle, idPublisher) = createRefs()
 
         Box(modifier = Modifier
