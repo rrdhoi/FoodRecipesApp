@@ -1,6 +1,8 @@
 package com.jagoteori.foodrecipesapp.app.extention
 
 import android.widget.EditText
+import androidx.compose.ui.text.input.TextFieldValue
+import java.util.*
 
 fun EditText.isNotNullOrEmpty(errorString: String): Boolean {
     return if (this.text.toString().trim().isBlank()) {
@@ -11,6 +13,32 @@ fun EditText.isNotNullOrEmpty(errorString: String): Boolean {
     }
 }
 
+fun TextFieldValue.isEmptyOrBlank(
+    title: String,
+    validateHandler: (errorMessage: String) -> Unit
+): Boolean =
+    if (this.text.isBlank()) {
+        validateHandler("Masukkan $title kamu")
+        true
+    } else false
+
+fun TextFieldValue.isLessThan6(
+    title: String,
+    validateHandler: (errorMessage: String) -> Unit
+): Boolean =
+    if (this.text.length <= 5) {
+        validateHandler("${title.capitalize(Locale.ROOT)} kurang dari 6")
+        true
+    } else {
+        false
+    }
+
+fun TextFieldValue.isInvalidEmailFormat(validateHandler: (errorMessage: String) -> Unit): Boolean =
+    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(this.text).matches()) {
+        validateHandler("Masukkan email valid")
+        true
+    } else false
+
 fun Boolean.errorHandler(
     whenIsError: () -> Unit,
 ): Boolean = if (this) {
@@ -20,33 +48,15 @@ fun Boolean.errorHandler(
     false
 }
 
-fun Boolean.successHandler(
-    whenIsSuccess: () -> Unit,
+fun Boolean.isNotErrorHandler(
+    whenIsNotError: () -> Unit,
 ): Boolean = if (!this) {
-    whenIsSuccess()
+    whenIsNotError()
     false
 } else {
     true
 }
 
-fun EditText.isEmailFormat(errorString: String): Boolean {
-    return if (!this.text.toString().contains("@")) {
-        this.error = errorString
-        false
-    } else {
-        true
-    }
-}
-
-fun EditText.isPasswordEquals(secondPassword: EditText, errorString: String): Boolean {
-    return if (this.text.toString() != secondPassword.text.toString()) {
-        this.error = errorString
-        secondPassword.error = errorString
-        false
-    } else {
-        true
-    }
-}
 
 fun EditText.isNotNullOrEmpty(): Boolean {
     return this.text.toString().trim().isNotBlank()

@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jagoteori.foodrecipesapp.app.extention.errorHandler
-import com.jagoteori.foodrecipesapp.app.extention.successHandler
+import com.jagoteori.foodrecipesapp.app.extention.isNotErrorHandler
 import com.jagoteori.foodrecipesapp.data.Resource
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeUseCase
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +35,7 @@ class SignInViewModel(val useCase: RecipeUseCase) : ViewModel() {
             } or (email.text.isBlank()).errorHandler {
                 emailErrorMessage = "Masukkan email kamu"
                 emailError = true
-            }).successHandler { emailError = false }
+            }).isNotErrorHandler { emailError = false }
 
         val isNotPasswordValid =
             ((password.text.length <= 5).errorHandler {
@@ -44,7 +44,7 @@ class SignInViewModel(val useCase: RecipeUseCase) : ViewModel() {
             } or (password.text.isBlank()).errorHandler {
                 passwordErrorMessage = "Masukkan password kamu"
                 passwordError = true
-            }).successHandler { passwordError = false }
+            }).isNotErrorHandler { passwordError = false }
 
         return !(isNotEmailValid or isNotPasswordValid)
     }
