@@ -1,7 +1,12 @@
 package com.jagoteori.foodrecipesapp.presentation.detail_recipe
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.ui.Modifier
 import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
@@ -9,22 +14,35 @@ import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.app.parcelable
 import com.jagoteori.foodrecipesapp.databinding.ActivityDetailRecipeBinding
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.DetailRecipeScreen
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.DetailRecipeScreenError
 
 
 class DetailRecipeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailRecipeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDetailRecipeBinding.inflate(layoutInflater)
+        /*   binding = ActivityDetailRecipeBinding.inflate(layoutInflater)
 
+
+           setContentView(binding.root)
+           setTabLayout(recipeData!!)
+           setDetailRecipe(recipeData)
+           setUpToolbar()*/
         val recipeData = intent.parcelable<RecipeEntity>(DATA_RECIPE)
 
-        setContentView(binding.root)
-        setTabLayout(recipeData!!)
-        setDetailRecipe(recipeData)
-        setUpToolbar()
+        setContent {
+            MaterialTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    if (recipeData == null)
+                        DetailRecipeScreenError(modifier = Modifier)
+                    else
+                        DetailRecipeScreen(modifier = Modifier, recipeEntity = recipeData)
+                }
+            }
+        }
     }
+
 
     private fun setUpToolbar() {
         binding.toolbar.apply {
@@ -58,7 +76,7 @@ class DetailRecipeActivity : AppCompatActivity() {
         viewPager.adapter = sectionsPagerAdapter
 
         TabLayoutMediator(binding.tabs, viewPager) { tab, position ->
-            tab.text = this.resources.getStringArray(R.array.tab_title)[position]
+            tab.text = this.resources.getStringArray(R.array.tab_detail_recipe)[position]
         }.attach()
 
         binding.tabs.requestLayout()

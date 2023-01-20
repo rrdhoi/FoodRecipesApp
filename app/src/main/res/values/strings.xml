@@ -16,7 +16,7 @@
         <item>Sesuai Kebutuhan</item>
     </string-array>
 
-    <string-array name="tab_title">
+    <string-array name="tab_detail_recipe">
         <item>Bahan Resep</item>
         <item>Langkah Masak</item>
         <item>Komentar</item>
