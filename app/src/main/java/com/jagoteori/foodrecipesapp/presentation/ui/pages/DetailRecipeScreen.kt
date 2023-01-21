@@ -1,8 +1,11 @@
 package com.jagoteori.foodrecipesapp.presentation.ui.pages
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
@@ -10,12 +13,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,16 +28,21 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.jagoteori.foodrecipesapp.R
-import com.jagoteori.foodrecipesapp.domain.entity.IngredientEntity
+import com.jagoteori.foodrecipesapp.domain.entity.CommentEntity
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
-import com.jagoteori.foodrecipesapp.presentation.ui.components.DottedLineDivider
+import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeViewModel
+import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomOutlineTextField
 import com.jagoteori.foodrecipesapp.presentation.ui.extention.NoRippleTheme
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.*
 import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
-fun DetailRecipeScreen(modifier: Modifier, recipeEntity: RecipeEntity) {
+fun DetailRecipeScreen(
+    modifier: Modifier,
+    recipeEntity: RecipeEntity,
+    detailViewModel: DetailRecipeViewModel
+) {
     Scaffold(
         topBar = {},
     ) { innerPadding ->
@@ -53,14 +62,18 @@ fun DetailRecipeScreen(modifier: Modifier, recipeEntity: RecipeEntity) {
             )
 
             DetailContent(modifier, recipeEntity)
-            DetailTabLayout(modifier = modifier, recipeEntity = recipeEntity)
+            DetailTabLayout(modifier = modifier, recipeEntity = recipeEntity, detailViewModel)
         }
     }
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun DetailTabLayout(modifier: Modifier, recipeEntity: RecipeEntity) {
+fun DetailTabLayout(
+    modifier: Modifier,
+    recipeEntity: RecipeEntity,
+    detailViewModel: DetailRecipeViewModel
+) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val tabRowItems = stringArrayResource(id = R.array.tab_detail_recipe)
@@ -107,6 +120,12 @@ fun DetailTabLayout(modifier: Modifier, recipeEntity: RecipeEntity) {
             ) {
                 when (pagerState.currentPage) {
                     0 -> IngredientsList(modifier = modifier, recipeEntity = recipeEntity)
+                    1 -> StepsCookList(modifier = modifier, recipeEntity = recipeEntity)
+                    2 -> CommentsList(
+                        modifier = modifier,
+                        recipeEntity = recipeEntity,
+                        detailViewModel = detailViewModel
+                    )
                 }
             }
         }
@@ -114,54 +133,98 @@ fun DetailTabLayout(modifier: Modifier, recipeEntity: RecipeEntity) {
 }
 
 @Composable
-fun IngredientsList(modifier: Modifier, recipeEntity: RecipeEntity) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(6.dp),
-        contentPadding = PaddingValues(bottom = 30.dp, start = 24.dp, end = 24.dp),
-        content = {
-            items(recipeEntity.listIngredients?.size!!) { index ->
-                IngredientItem(
-                    modifier = modifier,
-                    ingredient = recipeEntity.listIngredients[index]
-                )
-                DottedLineDivider(modifier = modifier.padding(top = 6.dp))
-            }
-        })
-}
-
-
-@Composable
-fun IngredientItem(modifier: Modifier, ingredient: IngredientEntity) {
-    Row(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = ingredient.ingredient!!,
-            modifier = modifier.weight(2f),
-            style = TextStyle(
+fun CommentsList(
+    modifier: Modifier,
+    recipeEntity: RecipeEntity,
+    detailViewModel: DetailRecipeViewModel
+) {
+    if (recipeEntity.listComments.isNullOrEmpty()) {
+        Column(
+            modifier = modifier.height(150.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Belum ada komentar",
                 color = BlackColor500,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
+                style = TextStyle(fontSize = 16.sp)
             )
-        )
-
-        Text(
-            text = ingredient.quantity!!,
-            modifier = modifier.weight(0.4f),
-            style = TextStyle(
-                color = BlackColor500,
-                textAlign = TextAlign.Start
-            )
-        )
-
-        Text(
-            text = ingredient.typeQuantity!!,
-            modifier = modifier.weight(1.6f),
-            style = TextStyle(
-                color = BlackColor500,
-                textAlign = TextAlign.Start
-            )
-        )
+        }
+    } else {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(bottom = 30.dp, start = 24.dp, end = 24.dp),
+            content = {
+                items(recipeEntity.listComments.size) { index ->
+                    CommentItem(
+                        modifier = modifier,
+                        comments = recipeEntity.listComments[index]
+                    )
+                }
+                item {
+                    CustomOutlineTextField(
+                        modifier = modifier,
+                        value = detailViewModel.addComment,
+                        onValueChange = {
+                            detailViewModel.addComment = it
+                        },
+                        onSendClick = {
+                            if (!detailViewModel.checkCommentFormIsInvalid()) {
+                                detailViewModel.addComment(recipeEntity.id!!).invokeOnCompletion {
+                                    detailViewModel.addComment = TextFieldValue("")
+                                    // TODO:: Snack bar error
+                                }
+                            }
+                        }
+                    )
+                }
+            })
     }
 }
+
+@Composable
+fun CommentItem(modifier: Modifier, comments: CommentEntity) {
+    Row(
+        modifier = modifier
+            .clip(shape = RoundedCornerShape(12.dp))
+            .background(color = BackgroundColor)
+    ) {
+        if (comments.profilePicture.isNullOrEmpty())
+            Surface(
+                modifier = modifier
+                    .size(40.dp)
+                    .padding(start = 12.dp, top = 12.dp),
+                shape = CircleShape,
+                color = Color(0xffdedede)
+            ) {}
+        else AsyncImage(
+            model = comments.profilePicture,
+            contentDescription = "Image Step Cook",
+            contentScale = ContentScale.Crop,
+            modifier = modifier
+                .size(40.dp)
+                .padding(start = 12.dp, top = 12.dp)
+                .clip(CircleShape),
+        )
+
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, start = 16.dp, end = 12.dp, bottom = 12.dp)
+        ) {
+            Text(
+                text = comments.name ?: "",
+                style = TextStyle(fontWeight = FontWeight.Bold, color = BlackColor500)
+            )
+            Text(
+                text = comments.message ?: "",
+                style = TextStyle(color = GreyColor500),
+                modifier = modifier.padding(top = 8.dp)
+            )
+        }
+    }
+}
+
 
 @Composable
 fun DetailContent(modifier: Modifier, recipeEntity: RecipeEntity) {
