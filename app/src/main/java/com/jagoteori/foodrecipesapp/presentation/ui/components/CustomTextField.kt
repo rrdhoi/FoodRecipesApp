@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -45,7 +46,7 @@ fun CustomTextField(
             value = value,
             onValueChange = onValueChange,
             shape = RoundedCornerShape(size = 12.dp),
-            textStyle = TextStyle(color = BlackColor500),
+            textStyle = TextStyle(color = BlackColor500, fontSize = 16.sp),
             isError = isError,
             modifier = modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
@@ -58,6 +59,7 @@ fun CustomTextField(
                 Text(
                     text = "Masukkan ${title.lowercase()} kamu", style = TextStyle(
                         color = GreyColor300,
+                        fontSize = 16.sp
                     )
                 )
             }
@@ -74,7 +76,7 @@ fun CustomTextField(
 }
 
 @Composable
-fun CustomOutlineTextField(
+fun CommentTextField(
     modifier: Modifier,
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
@@ -84,7 +86,7 @@ fun CustomOutlineTextField(
         value = value,
         onValueChange = onValueChange,
         shape = RoundedCornerShape(size = 12.dp),
-        textStyle = TextStyle(color = BlackColor500),
+        textStyle = TextStyle(color = BlackColor500, fontSize = 16.sp),
         modifier = modifier.fillMaxWidth(),
         colors = TextFieldDefaults.textFieldColors(
             cursorColor = BlackColor500,
@@ -105,10 +107,54 @@ fun CustomOutlineTextField(
             Text(
                 text = "Beri komentar", style = TextStyle(
                     color = GreyColor300,
+                    fontSize = 16.sp
                 )
             )
         }
     )
+}
+
+@Composable
+fun CustomOutlineTextField(
+    hintText: String,
+    modifier: Modifier,
+    value: TextFieldValue,
+    isError: Boolean,
+    errorMessage: String,
+    onValueChange: (TextFieldValue) -> Unit
+) {
+    Column(modifier = modifier.padding(top = 16.dp)) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(size = 12.dp),
+            textStyle = TextStyle(color = BlackColor500, fontSize = 16.sp),
+            isError = isError,
+            colors = TextFieldDefaults.textFieldColors(
+                cursorColor = BlackColor500,
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = BlackColorBody,
+                unfocusedIndicatorColor = GreyColorTextInput,
+            ),
+            placeholder = {
+                Text(
+                    text = hintText, style = TextStyle(
+                        color = GreyColor300,
+                        fontSize = 16.sp
+                    )
+                )
+            }
+        )
+
+        if (isError) {
+            Text(
+                text = errorMessage, color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = 16.dp, bottom = 6.dp)
+            )
+        }
+    }
 }
 
 var value by mutableStateOf(TextFieldValue(""))

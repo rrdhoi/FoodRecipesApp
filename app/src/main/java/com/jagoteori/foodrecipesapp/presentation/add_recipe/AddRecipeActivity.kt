@@ -7,16 +7,22 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.cardview.widget.CardView
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.get
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.flexbox.FlexboxLayout
-import com.google.firebase.auth.FirebaseAuth
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.app.Constants
 import com.jagoteori.foodrecipesapp.app.extention.isEmpty
@@ -30,6 +36,9 @@ import com.jagoteori.foodrecipesapp.domain.entity.IngredientEntity
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
 import com.jagoteori.foodrecipesapp.domain.entity.UserEntity
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.AddRecipeScreen
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.DetailRecipeScreen
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.DetailRecipeScreenError
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -45,7 +54,15 @@ class AddRecipeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAddRecipeBinding.inflate(layoutInflater)
+        setContent {
+            MaterialTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    AddRecipeScreen(modifier = Modifier, viewModel = addRecipeViewModel)
+                }
+            }
+        }
+
+       /* binding = ActivityAddRecipeBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
         setUpIngredients()
@@ -60,7 +77,7 @@ class AddRecipeActivity : AppCompatActivity() {
 
         binding.btnSubmit.setOnClickListener { submitRecipe() }
 
-        viewModelObserve()
+        viewModelObserve()*/
     }
 
     private fun viewModelObserve() {
@@ -86,7 +103,8 @@ class AddRecipeActivity : AppCompatActivity() {
                     myUserEntity = it.data!!
                 }
                 is Resource.Error -> {
-                    Toast.makeText(this, "Gagal memuat server, coba lagi!!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Gagal memuat server, coba lagi!!", Toast.LENGTH_LONG)
+                        .show()
                 }
                 else -> {}
             }

@@ -1,5 +1,9 @@
 package com.jagoteori.foodrecipesapp.presentation.add_recipe
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,4 +29,16 @@ class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
     fun addRecipe(recipeEntity: RecipeEntity) = viewModelScope.launch(Dispatchers.Main) {
         _addRecipe.postValue(useCase.addRecipe(recipeEntity))
     }
+
+    var title by mutableStateOf(TextFieldValue(""))
+    var titleError by mutableStateOf(false)
+    var titleErrorMessage by mutableStateOf("")
+
+    var category by mutableStateOf(TextFieldValue(""))
+    var categoryError by mutableStateOf(false)
+    var categoryErrorMessage by mutableStateOf("")
+
+    var description by mutableStateOf(TextFieldValue(""))
+    var descriptionError by mutableStateOf(false)
+    var descriptionErrorMessage by mutableStateOf("")
 }

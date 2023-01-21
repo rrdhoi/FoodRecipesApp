@@ -31,6 +31,7 @@ import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.domain.entity.CommentEntity
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeViewModel
+import com.jagoteori.foodrecipesapp.presentation.ui.components.CommentItem
 import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomOutlineTextField
 import com.jagoteori.foodrecipesapp.presentation.ui.extention.NoRippleTheme
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.*
@@ -128,99 +129,6 @@ fun DetailTabLayout(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun CommentsList(
-    modifier: Modifier,
-    recipeEntity: RecipeEntity,
-    detailViewModel: DetailRecipeViewModel
-) {
-    if (recipeEntity.listComments.isNullOrEmpty()) {
-        Column(
-            modifier = modifier.height(150.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Belum ada komentar",
-                color = BlackColor500,
-                style = TextStyle(fontSize = 16.sp)
-            )
-        }
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(bottom = 30.dp, start = 24.dp, end = 24.dp),
-            content = {
-                items(recipeEntity.listComments.size) { index ->
-                    CommentItem(
-                        modifier = modifier,
-                        comments = recipeEntity.listComments[index]
-                    )
-                }
-                item {
-                    CustomOutlineTextField(
-                        modifier = modifier,
-                        value = detailViewModel.addComment,
-                        onValueChange = {
-                            detailViewModel.addComment = it
-                        },
-                        onSendClick = {
-                            if (!detailViewModel.checkCommentFormIsInvalid()) {
-                                detailViewModel.addComment(recipeEntity.id!!).invokeOnCompletion {
-                                    detailViewModel.addComment = TextFieldValue("")
-                                    // TODO:: Snack bar error
-                                }
-                            }
-                        }
-                    )
-                }
-            })
-    }
-}
-
-@Composable
-fun CommentItem(modifier: Modifier, comments: CommentEntity) {
-    Row(
-        modifier = modifier
-            .clip(shape = RoundedCornerShape(12.dp))
-            .background(color = BackgroundColor)
-    ) {
-        if (comments.profilePicture.isNullOrEmpty())
-            Surface(
-                modifier = modifier
-                    .size(40.dp)
-                    .padding(start = 12.dp, top = 12.dp),
-                shape = CircleShape,
-                color = Color(0xffdedede)
-            ) {}
-        else AsyncImage(
-            model = comments.profilePicture,
-            contentDescription = "Image Step Cook",
-            contentScale = ContentScale.Crop,
-            modifier = modifier
-                .size(40.dp)
-                .padding(start = 12.dp, top = 12.dp)
-                .clip(CircleShape),
-        )
-
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp, start = 16.dp, end = 12.dp, bottom = 12.dp)
-        ) {
-            Text(
-                text = comments.name ?: "",
-                style = TextStyle(fontWeight = FontWeight.Bold, color = BlackColor500)
-            )
-            Text(
-                text = comments.message ?: "",
-                style = TextStyle(color = GreyColor500),
-                modifier = modifier.padding(top = 8.dp)
-            )
         }
     }
 }
