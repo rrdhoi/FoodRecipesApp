@@ -84,7 +84,6 @@ class HomeFragment : Fragment() {
             homeViewModel.uiState.collectAsState().value.let { uiState ->
                 when (uiState) {
                     is UiState.Loading -> {
-                        homeViewModel.getAllRecipes()
                     }
                     is UiState.Success -> {
                         recommendationRecipeAdapter.submitList(uiState.data)

@@ -81,7 +81,6 @@ class ProfileFragment : Fragment() {
         }
 
     private fun observeMyUser() {
-        viewModel.getMyUser()
         viewModel.myUser.observe(viewLifecycleOwner) { user ->
             when (user) {
                 is Resource.Loading -> {

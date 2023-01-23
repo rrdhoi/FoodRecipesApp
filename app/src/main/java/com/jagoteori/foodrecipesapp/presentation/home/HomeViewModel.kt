@@ -18,7 +18,7 @@ class HomeViewModel(private val recipeUseCase: RecipeUseCase) : ViewModel() {
     val uiState: StateFlow<UiState<List<RecipeEntity>>>
         get() = _uiState
 
-    fun getAllRecipes() {
+    init {
         viewModelScope.launch {
             recipeUseCase.getAllRecipes()
                 .catch {
@@ -29,17 +29,4 @@ class HomeViewModel(private val recipeUseCase: RecipeUseCase) : ViewModel() {
                 }
         }
     }
-    /* fun sendNotification(notification: PushNotification) =
-         viewModelScope.launch(Dispatchers.IO) {
-             try {
-                 val response = RetrofitInstance.api.postNotification(notification)
-                 if (response.isSuccessful) {
-                     Log.d("HomeViewModel", "Response Success")
-                 } else {
-                     Log.e("HomeViewModel", response.errorBody().toString())
-                 }
-             } catch (e: Exception) {
-                 Log.e("HomeViewModel", e.toString())
-             }
-         }*/
 }

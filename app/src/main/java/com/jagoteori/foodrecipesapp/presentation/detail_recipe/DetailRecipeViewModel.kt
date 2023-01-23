@@ -22,10 +22,12 @@ class DetailRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
 
     private var _user: UserEntity? = null
 
-    fun getMyUser() = viewModelScope.launch(Dispatchers.Main) {
-        val user = useCase.getMyUser()
-        if (user is Resource.Success) {
-            _user = user.data
+    init {
+        viewModelScope.launch(Dispatchers.Main) {
+            val user = useCase.getMyUser()
+            if (user is Resource.Success) {
+                _user = user.data
+            }
         }
     }
 

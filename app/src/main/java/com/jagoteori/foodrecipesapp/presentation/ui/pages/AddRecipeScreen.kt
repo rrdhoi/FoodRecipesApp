@@ -1,22 +1,21 @@
 package com.jagoteori.foodrecipesapp.presentation.ui.pages
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jagoteori.foodrecipesapp.R
+import com.jagoteori.foodrecipesapp.domain.entity.IngredientEntity
 import com.jagoteori.foodrecipesapp.presentation.add_recipe.AddRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomOutlineTextField
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColorTextInput
@@ -73,7 +72,91 @@ fun AddRecipeScreen(modifier: Modifier, viewModel: AddRecipeViewModel) {
         ) { newValue ->
             viewModel.description = newValue
         }
+
+        ListIngredientsForm(modifier = modifier)
     }
+}
+
+
+@Composable
+fun ListIngredientsForm(modifier: Modifier) {
+    val listSize = remember { mutableStateOf(1) }
+    val listIngredientItem = remember { mutableStateListOf<List<MutableState<TextFieldValue>>>() }
+
+    listIngredientItem.clear()
+
+    repeat(listSize.value) {
+        val listItem = remember { mutableStateListOf<MutableState<TextFieldValue>>() }
+
+        RowItemIngredient(modifier) { ingredient, quantity, typeQuantity ->
+            listItem.add(ingredient)
+            listItem.add(quantity)
+            listItem.add(typeQuantity)
+        }
+
+        listIngredientItem.add(listItem)
+    }
+
+    Button(onClick = {
+        listSize.value++
+    }) {
+        Text(text = "Tambah form")
+    }
+
+    Button(onClick = {
+        val listIngredient = mutableListOf<IngredientEntity>()
+        listIngredientItem.forEach { listItem ->
+            val ingredientEntity = IngredientEntity(
+                ingredient = listItem[0].value.text,
+                quantity = listItem[1].value.text,
+                typeQuantity = listItem[2].value.text,
+            )
+
+            listIngredient.add(ingredientEntity)
+        }
+        Log.d("isi listnya", "size: ${listIngredient.size}, data: ${listIngredient}")
+    }) {
+        Text(text = "Submit")
+    }
+}
+
+@Composable
+fun RowItemIngredient(
+    modifier: Modifier,
+    onAddToList: (ingredient: MutableState<TextFieldValue>, quantity: MutableState<TextFieldValue>, typeQuantity: MutableState<TextFieldValue>) -> Unit
+) {
+    val ingredient = remember { mutableStateOf(TextFieldValue("")) }
+    val quantity = remember { mutableStateOf(TextFieldValue("")) }
+    val typeQuantity = remember { mutableStateOf(TextFieldValue("")) }
+//        var typeQuantity by mutableStateOf("")
+
+    Column() {
+        CustomOutlineTextField(
+            "Masukkan bahan kamu",
+            modifier = modifier,
+            value = ingredient.value,
+            errorMessage = "",
+            isError = false,
+        ) { newValue ->
+            ingredient.value = newValue
+        }
+
+        Row {
+            OutlinedTextField(
+                value = quantity.value,
+                onValueChange = { quantity.value = it },
+                modifier = modifier.weight(1f)
+            )
+
+            OutlinedTextField(
+                value = typeQuantity.value,
+                onValueChange = { typeQuantity.value = it },
+                modifier = modifier.weight(1f)
+            )
+        }
+    }
+
+    onAddToList(ingredient, quantity, typeQuantity)
 }
 
 @Preview(showBackground = true)

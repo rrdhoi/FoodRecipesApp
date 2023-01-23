@@ -14,8 +14,10 @@ class ProfileViewModel(private val recipeUseCase: RecipeUseCase) : ViewModel() {
     private var _getMyUser = MutableLiveData<Resource<UserEntity>>()
     val myUser: LiveData<Resource<UserEntity>> get() = _getMyUser
 
-    fun getMyUser() = viewModelScope.launch(Dispatchers.Main) {
-        _getMyUser.value = recipeUseCase.getMyUser()
+    init {
+        viewModelScope.launch(Dispatchers.Main) {
+            _getMyUser.value = recipeUseCase.getMyUser()
+        }
     }
 
     fun updateUser(userEntity: UserEntity) = viewModelScope.launch(Dispatchers.IO) {

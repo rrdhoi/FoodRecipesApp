@@ -21,8 +21,6 @@ class DetailRecipeActivity : AppCompatActivity() {
 
         val recipeData = intent.parcelable<RecipeEntity>(DATA_RECIPE)
 
-        detailViewModel.getMyUser()
-
         setContent {
             MaterialTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
