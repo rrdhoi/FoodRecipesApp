@@ -1,28 +1,45 @@
 package com.jagoteori.foodrecipesapp.presentation.ui.pages
 
-import android.util.Log
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.jagoteori.foodrecipesapp.R
-import com.jagoteori.foodrecipesapp.domain.entity.IngredientEntity
 import com.jagoteori.foodrecipesapp.presentation.add_recipe.AddRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomOutlineTextField
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.ListIngredientsForm
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.ListStepsCookForm
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColorTextInput
 
+
 @Composable
-fun AddRecipeScreen(modifier: Modifier, viewModel: AddRecipeViewModel) {
+fun AddRecipeScreen(
+    modifier: Modifier,
+    viewModel: AddRecipeViewModel,
+) {
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
+    var hasImage by remember { mutableStateOf(false) }
+    var imageUri by remember { mutableStateOf<Uri?>(Uri.EMPTY) }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            hasImage = success
+        }
+    )
 
     Column(
         modifier = modifier
@@ -35,11 +52,24 @@ fun AddRecipeScreen(modifier: Modifier, viewModel: AddRecipeViewModel) {
             modifier = modifier
                 .fillMaxWidth()
                 .height(300.dp)
+                .clickable {
+                    val uri = ComposeFileProvider.getImageUri(context)
+                    imageUri = uri
+
+                    hasImage = false
+
+                    cameraLauncher.launch(uri)
+
+                }
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_baseline_add_photo_alternate_24),
+                painter = if (hasImage and (imageUri != null)) rememberAsyncImagePainter(imageUri)
+                else painterResource(
+                    id = R.drawable.ic_baseline_add_photo_alternate_24
+                ),
+                contentScale = ContentScale.Crop,
                 contentDescription = "Add Recipe Picture",
-                modifier = modifier.padding(50.dp)
+                modifier = modifier.fillMaxSize()
             )
         }
 
@@ -74,89 +104,8 @@ fun AddRecipeScreen(modifier: Modifier, viewModel: AddRecipeViewModel) {
         }
 
         ListIngredientsForm(modifier = modifier)
+        ListStepsCookForm(modifier = modifier)
     }
-}
-
-
-@Composable
-fun ListIngredientsForm(modifier: Modifier) {
-    val listSize = remember { mutableStateOf(1) }
-    val listIngredientItem = remember { mutableStateListOf<List<MutableState<TextFieldValue>>>() }
-
-    listIngredientItem.clear()
-
-    repeat(listSize.value) {
-        val listItem = remember { mutableStateListOf<MutableState<TextFieldValue>>() }
-
-        RowItemIngredient(modifier) { ingredient, quantity, typeQuantity ->
-            listItem.add(ingredient)
-            listItem.add(quantity)
-            listItem.add(typeQuantity)
-        }
-
-        listIngredientItem.add(listItem)
-    }
-
-    Button(onClick = {
-        listSize.value++
-    }) {
-        Text(text = "Tambah form")
-    }
-
-    Button(onClick = {
-        val listIngredient = mutableListOf<IngredientEntity>()
-        listIngredientItem.forEach { listItem ->
-            val ingredientEntity = IngredientEntity(
-                ingredient = listItem[0].value.text,
-                quantity = listItem[1].value.text,
-                typeQuantity = listItem[2].value.text,
-            )
-
-            listIngredient.add(ingredientEntity)
-        }
-        Log.d("isi listnya", "size: ${listIngredient.size}, data: ${listIngredient}")
-    }) {
-        Text(text = "Submit")
-    }
-}
-
-@Composable
-fun RowItemIngredient(
-    modifier: Modifier,
-    onAddToList: (ingredient: MutableState<TextFieldValue>, quantity: MutableState<TextFieldValue>, typeQuantity: MutableState<TextFieldValue>) -> Unit
-) {
-    val ingredient = remember { mutableStateOf(TextFieldValue("")) }
-    val quantity = remember { mutableStateOf(TextFieldValue("")) }
-    val typeQuantity = remember { mutableStateOf(TextFieldValue("")) }
-//        var typeQuantity by mutableStateOf("")
-
-    Column() {
-        CustomOutlineTextField(
-            "Masukkan bahan kamu",
-            modifier = modifier,
-            value = ingredient.value,
-            errorMessage = "",
-            isError = false,
-        ) { newValue ->
-            ingredient.value = newValue
-        }
-
-        Row {
-            OutlinedTextField(
-                value = quantity.value,
-                onValueChange = { quantity.value = it },
-                modifier = modifier.weight(1f)
-            )
-
-            OutlinedTextField(
-                value = typeQuantity.value,
-                onValueChange = { typeQuantity.value = it },
-                modifier = modifier.weight(1f)
-            )
-        }
-    }
-
-    onAddToList(ingredient, quantity, typeQuantity)
 }
 
 @Preview(showBackground = true)

@@ -8,15 +8,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.cardview.widget.CardView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.get
@@ -37,8 +37,6 @@ import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
 import com.jagoteori.foodrecipesapp.domain.entity.UserEntity
 import com.jagoteori.foodrecipesapp.presentation.ui.pages.AddRecipeScreen
-import com.jagoteori.foodrecipesapp.presentation.ui.pages.DetailRecipeScreen
-import com.jagoteori.foodrecipesapp.presentation.ui.pages.DetailRecipeScreenError
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -52,32 +50,37 @@ class AddRecipeActivity : AppCompatActivity() {
     private val listIngredients: ArrayList<IngredientEntity> = ArrayList()
     private val listStepCook: ArrayList<StepCookEntity> = ArrayList()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MaterialTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AddRecipeScreen(modifier = Modifier, viewModel = addRecipeViewModel)
+                    AddRecipeScreen(
+                        modifier = Modifier,
+                        viewModel = addRecipeViewModel,
+                    )
                 }
             }
         }
 
-       /* binding = ActivityAddRecipeBinding.inflate(layoutInflater)
+        /* binding = ActivityAddRecipeBinding.inflate(layoutInflater)
 
-        setContentView(binding.root)
-        setUpIngredients()
-        setUpStepCook()
-        toolbarSetUp()
+         setContentView(binding.root)
+         setUpIngredients()
+         setUpStepCook()
+         toolbarSetUp()
 
-        StepCookFunction.onActivityCreate()
+         StepCookFunction.onActivityCreate()
 
-        binding.btnAddIngredient.setOnClickListener { addIngredientView(binding.listIngredients) }
-        binding.imgRecipe.setOnClickListener { imagePicker(this, IMAGE_PICKER_ADD_RECIPE_CODE) }
-        binding.btnAddStepCook.setOnClickListener { addStepCookView() }
+         binding.btnAddIngredient.setOnClickListener { addIngredientView(binding.listIngredients) }
+         binding.imgRecipe.setOnClickListener { imagePicker(this, IMAGE_PICKER_ADD_RECIPE_CODE) }
+         binding.btnAddStepCook.setOnClickListener { addStepCookView() }
 
-        binding.btnSubmit.setOnClickListener { submitRecipe() }
+         binding.btnSubmit.setOnClickListener { submitRecipe() }
 
-        viewModelObserve()*/
+         viewModelObserve()*/
     }
 
     private fun viewModelObserve() {
@@ -319,7 +322,7 @@ class AddRecipeActivity : AppCompatActivity() {
     }
 
 
-    @Deprecated("Deprecated in Java")
+   /* @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -352,7 +355,7 @@ class AddRecipeActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
         }
-    }
+    }*/
 
     companion object {
         const val IMAGE_PICKER_ADD_RECIPE_CODE = 101

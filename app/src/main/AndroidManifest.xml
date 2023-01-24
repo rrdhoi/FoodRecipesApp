@@ -54,7 +54,20 @@
             android:name=".MainActivity"
             android:exported="false">
         </activity>
+
         <activity android:name=".presentation.add_recipe.AddRecipeActivity" />
+
+        <provider
+            android:name=".presentation.ui.pages.ComposeFileProvider"
+            android:authorities="com.jagoteori.foodrecipesapp.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
+
+
 
 </manifest>
