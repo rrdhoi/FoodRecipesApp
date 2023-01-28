@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
@@ -153,7 +152,10 @@ class HomeFragment : Fragment() {
                     state = pagerState,
                 ) {
                     if (recipes == null) {
-                        Column(verticalArrangement = Arrangement.Center, modifier = modifier.height(250.dp)) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            modifier = modifier.height(250.dp)
+                        ) {
                             CircularProgressIndicator(color = BlackColor500)
                         }
                     } else {
@@ -180,7 +182,6 @@ class HomeFragment : Fragment() {
             }
         } else {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = modifier.padding(top = 8.dp),
                 contentPadding = PaddingValues(
                     bottom = 30.dp,

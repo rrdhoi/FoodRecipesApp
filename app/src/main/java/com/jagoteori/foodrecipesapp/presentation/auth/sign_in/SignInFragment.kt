@@ -84,7 +84,8 @@ class SignInFragment : Fragment() {
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
                 isError = viewModel.passwordError,
-                errorMessage = viewModel.passwordErrorMessage
+                errorMessage = viewModel.passwordErrorMessage,
+                isPassword = true
             )
         }
     }

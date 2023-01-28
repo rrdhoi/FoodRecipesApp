@@ -27,7 +27,7 @@ fun ItemCategoryCard(
     imageRecipe: String?,
     itemOnClick: () -> Unit,
 ) {
-    ConstraintLayout(modifier = Modifier.fillMaxSize().clickable { itemOnClick() }) {
+    ConstraintLayout(modifier = Modifier.padding(bottom = 16.dp).fillMaxSize().clickable { itemOnClick() }) {
         val (idImageRecipe, idTitle, idPublisher) = createRefs()
 
         Box(modifier = Modifier

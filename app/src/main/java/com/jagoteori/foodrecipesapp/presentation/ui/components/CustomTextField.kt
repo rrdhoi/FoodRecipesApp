@@ -16,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,7 +32,8 @@ fun CustomTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     isError: Boolean,
-    errorMessage: String
+    errorMessage: String,
+    isPassword: Boolean = false
 ) {
     Column {
         Text(
@@ -52,6 +55,7 @@ fun CustomTextField(
                 focusedIndicatorColor = BlackColorBody,
                 unfocusedIndicatorColor = GreyColorTextInput,
             ),
+            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
             placeholder = {
                 Text(
                     text = "Masukkan ${title.lowercase()} kamu", style = TextStyle(
@@ -64,7 +68,7 @@ fun CustomTextField(
 
         if (isError) {
             Text(
-                text = errorMessage, color = MaterialTheme.colors.error,
+                text = errorMessage, color = colors.error,
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier.padding(start = 16.dp)
             )
