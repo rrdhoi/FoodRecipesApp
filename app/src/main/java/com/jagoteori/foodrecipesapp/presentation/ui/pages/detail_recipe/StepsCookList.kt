@@ -1,4 +1,4 @@
-package com.jagoteori.foodrecipesapp.presentation.ui.pages
+package com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

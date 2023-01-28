@@ -1,15 +1,11 @@
 package com.jagoteori.foodrecipesapp.presentation.add_recipe
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.cardview.widget.CardView
@@ -20,14 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.get
-import com.bumptech.glide.Glide
-import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.flexbox.FlexboxLayout
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.app.Constants
 import com.jagoteori.foodrecipesapp.app.extention.isEmpty
 import com.jagoteori.foodrecipesapp.app.extention.isNotNullOrEmpty
-import com.jagoteori.foodrecipesapp.app.extention.length
 import com.jagoteori.foodrecipesapp.app.extention.twoDigitsFormat
 import com.jagoteori.foodrecipesapp.app.utils.imagePicker
 import com.jagoteori.foodrecipesapp.data.Resource
@@ -36,7 +29,7 @@ import com.jagoteori.foodrecipesapp.domain.entity.IngredientEntity
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
 import com.jagoteori.foodrecipesapp.domain.entity.UserEntity
-import com.jagoteori.foodrecipesapp.presentation.ui.pages.AddRecipeScreen
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.AddRecipeScreen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -174,7 +167,7 @@ class AddRecipeActivity : AppCompatActivity() {
                 listComments = null
             )
 
-            addRecipeViewModel.addRecipe(recipeEntity)
+//            addRecipeViewModel.addRecipe(recipeEntity)
         }
     }
 

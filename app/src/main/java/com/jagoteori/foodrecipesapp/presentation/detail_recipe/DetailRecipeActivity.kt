@@ -9,8 +9,8 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.jagoteori.foodrecipesapp.app.parcelable
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
-import com.jagoteori.foodrecipesapp.presentation.ui.pages.DetailRecipeScreen
-import com.jagoteori.foodrecipesapp.presentation.ui.pages.DetailRecipeScreenError
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe.DetailRecipeScreen
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe.DetailRecipeScreenError
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 

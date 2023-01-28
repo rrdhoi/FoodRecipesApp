@@ -6,11 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -155,6 +152,25 @@ fun CustomOutlineTextField(
             )
         }
     }
+}
+
+
+@Composable
+fun outlineTextFieldColor() : TextFieldColors = TextFieldDefaults.textFieldColors(
+    cursorColor = BlackColor500,
+    backgroundColor = Color.Transparent,
+    focusedIndicatorColor = BlackColorBody,
+    unfocusedIndicatorColor = GreyColorTextInput,
+)
+
+@Composable
+fun HintPlaceholder(hint: String) {
+    Text(
+        text = hint, style = TextStyle(
+            color = GreyColor300,
+            fontSize = 16.sp
+        )
+    )
 }
 
 var value by mutableStateOf(TextFieldValue(""))

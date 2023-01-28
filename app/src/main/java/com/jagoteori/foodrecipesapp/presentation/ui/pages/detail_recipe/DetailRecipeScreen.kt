@@ -1,11 +1,7 @@
-package com.jagoteori.foodrecipesapp.presentation.ui.pages
+package com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
@@ -13,13 +9,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,12 +22,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.jagoteori.foodrecipesapp.R
-import com.jagoteori.foodrecipesapp.domain.entity.CommentEntity
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeViewModel
-import com.jagoteori.foodrecipesapp.presentation.ui.components.CommentItem
-import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomOutlineTextField
 import com.jagoteori.foodrecipesapp.presentation.ui.extention.NoRippleTheme
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.CommentsList
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.*
 import kotlinx.coroutines.launch
 import java.util.*

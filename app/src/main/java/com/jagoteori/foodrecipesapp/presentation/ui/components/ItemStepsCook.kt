@@ -28,6 +28,7 @@ fun ItemStepCook(modifier: Modifier, steps: StepCookEntity) {
         modifier = modifier
             .clip(shape = RoundedCornerShape(12.dp))
             .background(color = BackgroundColor)
+            .fillMaxWidth()
     ) {
 
         Row(modifier = modifier.padding(start = 12.dp, top = 12.dp)) {

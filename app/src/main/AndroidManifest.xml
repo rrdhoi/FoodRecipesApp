@@ -8,6 +8,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"
         tools:ignore="ScopedStorage" />
+
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -58,7 +59,7 @@
         <activity android:name=".presentation.add_recipe.AddRecipeActivity" />
 
         <provider
-            android:name=".presentation.ui.pages.ComposeFileProvider"
+            android:name=".app.service.ComposeFileProvider"
             android:authorities="com.jagoteori.foodrecipesapp.fileprovider"
             android:grantUriPermissions="true"
             android:exported="false">

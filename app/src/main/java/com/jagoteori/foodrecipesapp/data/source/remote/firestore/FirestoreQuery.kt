@@ -1,6 +1,7 @@
 package com.jagoteori.foodrecipesapp.data.source.remote.firestore
 
 import android.net.Uri
+import android.os.Environment
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -12,6 +13,8 @@ import com.jagoteori.foodrecipesapp.data.model.RecipeModel
 import com.jagoteori.foodrecipesapp.data.model.StepCookModel
 import com.jagoteori.foodrecipesapp.data.model.UserModel
 import com.jagoteori.foodrecipesapp.data.source.remote.await
+import java.io.File
+
 
 class FirestoreQuery(
     private val firestore: FirebaseFirestore,
@@ -52,7 +55,8 @@ class FirestoreQuery(
         val refImageRecipe =
             storage.getReference("/${recipe.publisherId}/recipes/${createDocument.id}")
 
-        val uploadRecipeImageTask = refImageRecipe.putFile(Uri.parse(recipe.recipePicture))
+        val uploadRecipeImageTask =
+            refImageRecipe.putFile(Uri.parse(recipe.recipePicture))
 
         uploadRecipeImageTask.addOnCompleteListener { task ->
             if (!task.isSuccessful) {

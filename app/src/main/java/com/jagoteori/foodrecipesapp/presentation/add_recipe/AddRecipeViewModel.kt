@@ -1,18 +1,21 @@
 package com.jagoteori.foodrecipesapp.presentation.add_recipe
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.net.Uri
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jagoteori.foodrecipesapp.data.Resource
+import com.jagoteori.foodrecipesapp.domain.entity.IngredientEntity
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
+import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
 import com.jagoteori.foodrecipesapp.domain.entity.UserEntity
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeUseCase
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.ItemIngredient
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.ItemStepCook
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -22,14 +25,6 @@ class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
 
     private var _getMyUser = MutableLiveData<Resource<UserEntity>>()
     val myUser: LiveData<Resource<UserEntity>> get() = _getMyUser
-
-    fun getMyUser() = viewModelScope.launch(Dispatchers.Main) {
-        _getMyUser.value = useCase.getMyUser()
-    }
-
-    fun addRecipe(recipeEntity: RecipeEntity) = viewModelScope.launch(Dispatchers.Main) {
-        _addRecipe.postValue(useCase.addRecipe(recipeEntity))
-    }
 
     var title by mutableStateOf(TextFieldValue(""))
     var titleError by mutableStateOf(false)
@@ -43,4 +38,69 @@ class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
     var descriptionError by mutableStateOf(false)
     var descriptionErrorMessage by mutableStateOf("")
 
+    var listIngredientFormSize by mutableStateOf(1)
+    var listItemIngredientForm = mutableStateListOf<MutableState<ItemIngredient>>()
+
+    var listStepCookFormSize by mutableStateOf(1)
+    var listItemStepCookForm = mutableStateListOf<MutableState<ItemStepCook>>()
+
+    var imageRecipe by mutableStateOf("")
+
+    var isLoading by mutableStateOf(false)
+
+    var imagePickerDialogState by mutableStateOf(false)
+
+    fun getMyUser() = viewModelScope.launch(Dispatchers.Main) {
+        _getMyUser.value = useCase.getMyUser()
+    }
+
+    fun onSubmitRecipe() {
+        isLoading = true
+        val listIngredient = mutableListOf<IngredientEntity>()
+        val listStepCook = mutableListOf<StepCookEntity>()
+
+        listItemIngredientForm.forEach { listItem ->
+            val ingredientEntity = IngredientEntity(
+                ingredient = listItem.value.ingredient?.value?.text,
+                quantity = listItem.value.quantity?.value?.text,
+                typeQuantity = listItem.value.typeQuantity?.value,
+            )
+
+            listIngredient.add(ingredientEntity)
+        }
+
+        listItemStepCookForm.forEachIndexed { index, listItem ->
+            val itemStepCook = StepCookEntity(
+                stepNumber = index + 1,
+                stepDescription = listItem.value.description?.value?.text,
+                stepImages = listItem.value.listImageUri?.map { uri: Uri? -> uri.toString() }
+                    ?.toList()
+            )
+
+            listStepCook.add(itemStepCook)
+        }
+
+        val recipeEntity = RecipeEntity(
+            id = null,
+            title = title.text,
+            category = category.text,
+            description = description.text,
+            publisherId = myUser.value?.data?.userId,
+            publisher = myUser.value?.data?.name,
+            recipePicture = imageRecipe,
+            listComments = null,
+            listIngredients = listIngredient,
+            listStepCooking = listStepCook
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            useCase.addRecipe(recipeEntity)
+        }
+
+        isLoading = false
+    }
+
+    init {
+        getMyUser()
+    }
 }

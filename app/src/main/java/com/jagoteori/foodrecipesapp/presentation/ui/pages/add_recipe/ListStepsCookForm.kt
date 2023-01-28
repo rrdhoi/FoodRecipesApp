@@ -1,17 +1,14 @@
 package com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -19,13 +16,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.jagoteori.foodrecipesapp.domain.entity.StepCookEntity
-import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomOutlineTextField
-import com.jagoteori.foodrecipesapp.presentation.ui.pages.ComposeFileProvider
-import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColorTextInput
+import com.jagoteori.foodrecipesapp.R
+import com.jagoteori.foodrecipesapp.presentation.ui.components.HintPlaceholder
+import com.jagoteori.foodrecipesapp.presentation.ui.components.outlineTextFieldColor
+import com.jagoteori.foodrecipesapp.presentation.ui.extention.noRippleClickable
+import com.jagoteori.foodrecipesapp.app.service.ComposeFileProvider
+import com.jagoteori.foodrecipesapp.presentation.ui.theme.BackgroundColor
+import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
+import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor100
+import com.jagoteori.foodrecipesapp.presentation.ui.theme.WhiteColor
 
 data class ItemStepCook(
     var description: MutableState<TextFieldValue>?,
@@ -33,45 +37,43 @@ data class ItemStepCook(
 )
 
 @Composable
-fun ListStepsCookForm(modifier: Modifier) {
-    val listSize = remember { mutableStateOf(1) }
-    val listStepCookItem = remember { mutableStateListOf<MutableState<ItemStepCook>>() }
+fun ListStepsCookForm(
+    modifier: Modifier,
+    formSize: Int,
+    listItemForm: SnapshotStateList<MutableState<ItemStepCook>>,
+    onAddStepCookForm: () -> Unit
+) {
 
-    listStepCookItem.clear()
+    listItemForm.clear()
 
-    repeat(listSize.value) {
-        val listItem =
+    repeat(formSize) {
+        val itemStepCook =
             remember { mutableStateOf(ItemStepCook(description = null, listImageUri = null)) }
 
         RowItemStepCook(modifier) { description, listImageUri ->
-            listItem.value.description = description
-            listItem.value.listImageUri = listImageUri
+            itemStepCook.value.description = description
+            itemStepCook.value.listImageUri = listImageUri
         }
 
-        listStepCookItem.add(listItem)
+        listItemForm.add(itemStepCook)
     }
 
-    Button(onClick = {
-        listSize.value++
-    }) {
-        Text(text = "Tambah form")
-    }
-
-    Button(onClick = {
-        val listStepCook = mutableListOf<StepCookEntity>()
-        listStepCookItem.forEachIndexed { index, listItem ->
-            val itemStepCook = StepCookEntity(
-                stepNumber = index + 1,
-                stepDescription = listItem.value.description?.value?.text,
-                stepImages = listItem.value.listImageUri?.map { uri: Uri? -> uri.toString() }
-                    ?.toList()
-            )
-
-            listStepCook.add(itemStepCook)
-        }
-        Log.d("step cook::", "size: ${listStepCook.size}, data: ${listStepCook}")
-    }) {
-        Text(text = "Submit step cook")
+    Button(
+        modifier = modifier
+            .padding(top = 16.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = BlackColor500,
+            contentColor = WhiteColor
+        ),
+        onClick = onAddStepCookForm
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_add_recipe),
+            contentDescription = "Icon Add Ingredient",
+            modifier = modifier.padding(end = 8.dp)
+        )
+        Text(text = "Tambah langkah memasak")
     }
 }
 
@@ -94,22 +96,38 @@ fun RowItemStepCook(
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
-            if(success) {
+            if (success) {
                 imagesSize++
             }
         }
     )
 
-    Column() {
-        CustomOutlineTextField(
-            "Masukkan deskripsi langkah memasak kamu",
-            modifier = modifier,
-            value = description.value,
-            errorMessage = "",
-            isError = false,
-        ) { newValue ->
-            description.value = newValue
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+
         }
+    )
+
+    Column(
+        modifier = modifier
+            .padding(top = 16.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(BackgroundColor)
+    ) {
+        OutlinedTextField(
+            value = description.value,
+            onValueChange = { newValue ->
+                description.value = newValue
+            },
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, start = 12.dp, end = 12.dp),
+            shape = RoundedCornerShape(size = 12.dp),
+            textStyle = TextStyle(color = BlackColor500, fontSize = 16.sp),
+            colors = outlineTextFieldColor(),
+            placeholder = { HintPlaceholder(hint = "Masukkan deskripsi langkah memasak kamu") }
+        )
 
         Row {
             if (imagesSize != 0) {
@@ -119,9 +137,11 @@ fun RowItemStepCook(
                         contentDescription = "Image Step Cook",
                         contentScale = ContentScale.Crop,
                         modifier = modifier
-                            .clip(RoundedCornerShape(12.dp))
+                            .padding(12.dp)
                             .width(80.dp)
                             .height(80.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .fillMaxSize()
 
                     )
                 }
@@ -130,11 +150,13 @@ fun RowItemStepCook(
             if (imagesSize <= 2) {
                 Card(
                     shape = RoundedCornerShape(12.dp),
-                    border = BorderStroke(width = 1.dp, color = GreyColorTextInput),
+                    border = BorderStroke(width = 1.dp, color = GreyColor100),
                     modifier = modifier
-                        .width(80.dp)
-                        .height(80.dp)
-                        .clickable {
+                        .width(100.dp)
+                        .height(100.dp)
+                        .padding(12.dp)
+                        .background(color = WhiteColor)
+                        .noRippleClickable {
                             val uri = ComposeFileProvider.getImageUri(localContext)
 
                             when (imagesSize) {
@@ -143,14 +165,17 @@ fun RowItemStepCook(
                                 2 -> listImagesUri.add(2, uri)
                             }
 
+
                             cameraLauncher.launch(uri)
                         }
                 ) {
                     Image(
-                        painter = painterResource(id = com.jagoteori.foodrecipesapp.R.drawable.ic_baseline_add_photo_alternate_24),
+                        painter = painterResource(id = R.drawable.ic_baseline_photo_camera_24),
                         contentScale = ContentScale.Crop,
                         contentDescription = "Add Recipe Picture",
-                        modifier = modifier.fillMaxSize()
+                        modifier = modifier
+                            .padding(14.dp)
+                            .fillMaxSize()
                     )
                 }
             }
