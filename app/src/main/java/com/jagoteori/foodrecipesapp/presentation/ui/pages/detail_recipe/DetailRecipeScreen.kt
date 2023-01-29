@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +25,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeViewModel
+import com.jagoteori.foodrecipesapp.presentation.ui.components.TopAppBarBlack
 import com.jagoteori.foodrecipesapp.presentation.ui.extention.NoRippleTheme
 import com.jagoteori.foodrecipesapp.presentation.ui.pages.CommentsList
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.*
@@ -34,17 +36,24 @@ import java.util.*
 fun DetailRecipeScreen(
     modifier: Modifier,
     recipeEntity: RecipeEntity,
-    detailViewModel: DetailRecipeViewModel
+    detailViewModel: DetailRecipeViewModel,
+    onBackPressed: () -> Unit,
 ) {
     Scaffold(
-        topBar = {},
+        topBar = {
+            TopAppBarBlack(
+                title = recipeEntity.title ?: "Detail Resep",
+                icon = painterResource(id = R.drawable.ic_arrow_back_white)
+            ) {
+                onBackPressed()
+            }
+        },
     ) { innerPadding ->
         Column(
             Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-
             AsyncImage(
                 model = recipeEntity.recipePicture,
                 contentDescription = "Image Recipe",
@@ -52,6 +61,7 @@ fun DetailRecipeScreen(
                 modifier = modifier
                     .fillMaxWidth()
                     .height(300.dp)
+                    .padding(top = 16.dp)
             )
 
             DetailContent(modifier, recipeEntity)

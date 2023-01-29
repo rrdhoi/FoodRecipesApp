@@ -31,7 +31,9 @@ class DetailRecipeActivity : AppCompatActivity() {
                             modifier = Modifier,
                             recipeEntity = recipeData,
                             detailViewModel = detailViewModel
-                        )
+                        ) {
+                            finish()
+                        }
                 }
             }
         }

@@ -2,7 +2,6 @@ package com.jagoteori.foodrecipesapp.presentation.add_recipe
 
 import android.net.Uri
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,7 +23,7 @@ class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
     val addRecipe: LiveData<Resource<String>> get() = _addRecipe
 
     private var _getMyUser = MutableLiveData<Resource<UserEntity>>()
-    val myUser: LiveData<Resource<UserEntity>> get() = _getMyUser
+    private val myUser: LiveData<Resource<UserEntity>> get() = _getMyUser
 
     var title by mutableStateOf(TextFieldValue(""))
     var titleError by mutableStateOf(false)
