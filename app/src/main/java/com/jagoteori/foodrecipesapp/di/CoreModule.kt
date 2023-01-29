@@ -14,7 +14,6 @@ import com.jagoteori.foodrecipesapp.presentation.add_recipe.AddRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.auth.sign_in.SignInViewModel
 import com.jagoteori.foodrecipesapp.presentation.auth.sign_up.SignUpViewModel
 import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeViewModel
-import com.jagoteori.foodrecipesapp.presentation.detail_recipe.comments.CommentsViewModel
 import com.jagoteori.foodrecipesapp.presentation.home.CategoryViewModel
 import com.jagoteori.foodrecipesapp.presentation.home.HomeViewModel
 import com.jagoteori.foodrecipesapp.presentation.profile.ProfileViewModel
@@ -45,7 +44,7 @@ val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { AddRecipeViewModel(get()) }
     viewModel { DetailRecipeViewModel(get()) }
-    viewModel { CommentsViewModel(get()) }
+//    viewModel { CommentsViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { ProfileViewModel(get()) }

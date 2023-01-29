@@ -12,7 +12,7 @@ import com.jagoteori.foodrecipesapp.AuthActivity
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.databinding.ProfileFragmentBinding
 import com.jagoteori.foodrecipesapp.presentation.profile.my_recipes.MyRecipesFragment
-import com.jagoteori.foodrecipesapp.presentation.ui.pages.ProfileScreen
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.profile.ProfileScreen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 

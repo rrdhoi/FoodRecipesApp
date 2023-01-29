@@ -2,6 +2,8 @@ package com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
@@ -15,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -27,7 +28,6 @@ import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.components.TopAppBarBlack
 import com.jagoteori.foodrecipesapp.presentation.ui.extention.NoRippleTheme
-import com.jagoteori.foodrecipesapp.presentation.ui.pages.CommentsList
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.*
 import kotlinx.coroutines.launch
 import java.util.*
@@ -39,6 +39,8 @@ fun DetailRecipeScreen(
     detailViewModel: DetailRecipeViewModel,
     onBackPressed: () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
+
     Scaffold(
         topBar = {
             TopAppBarBlack(
@@ -52,7 +54,7 @@ fun DetailRecipeScreen(
         Column(
             Modifier
                 .padding(innerPadding)
-                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
             AsyncImage(
                 model = recipeEntity.recipePicture,
@@ -61,7 +63,6 @@ fun DetailRecipeScreen(
                 modifier = modifier
                     .fillMaxWidth()
                     .height(300.dp)
-                    .padding(top = 16.dp)
             )
 
             DetailContent(modifier, recipeEntity)
@@ -138,7 +139,7 @@ fun DetailTabLayout(
 
 @Composable
 fun DetailContent(modifier: Modifier, recipeEntity: RecipeEntity) {
-    Column(modifier.fillMaxWidth()) {
+    Column {
         Text(
             text = recipeEntity.title ?: "",
             style = TextStyle(
@@ -179,24 +180,5 @@ fun DetailContent(modifier: Modifier, recipeEntity: RecipeEntity) {
                 .padding(top = 16.dp, start = 24.dp)
                 .fillMaxWidth(),
         )
-    }
-}
-
-@Composable
-fun DetailRecipeScreenError(modifier: Modifier) {
-    Column(
-        modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Opss terjadi kesalahan!")
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DetailRecipeScreenPreview() {
-    MaterialTheme() {
     }
 }

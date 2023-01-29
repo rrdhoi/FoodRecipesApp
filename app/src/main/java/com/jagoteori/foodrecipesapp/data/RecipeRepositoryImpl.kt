@@ -35,18 +35,22 @@ class RecipeRepositoryImpl(private val remoteDataSource: RemoteDataSource) : Rec
         }
     }
 
-    override suspend fun getMyRecipes(): Resource<List<RecipeEntity>> =
-        when (val response = remoteDataSource.getMyRecipes()) {
-            is ApiResponse.Success -> {
-                val recipeToEntity = response.data.map {
-                    it.listComments = remoteDataSource.getComments(it.id!!)
-                    DataMapper.recipeModelToEntity(it)
-                }.toList()
-                Resource.Success(recipeToEntity)
+    override suspend fun getMyRecipes(): Flow<Resource<List<RecipeEntity>>> = flow {
+        emit(Resource.Loading())
+        emit(
+            when (val response = remoteDataSource.getMyRecipes()) {
+                is ApiResponse.Success -> {
+                    val recipeToEntity = response.data.map {
+                        it.listComments = remoteDataSource.getComments(it.id!!)
+                        DataMapper.recipeModelToEntity(it)
+                    }.toList()
+                    Resource.Success(recipeToEntity)
+                }
+                is ApiResponse.Error -> Resource.Error(response.errorMessage)
+                is ApiResponse.Empty -> Resource.Error("Recipes is Empty")
             }
-            is ApiResponse.Error -> Resource.Error(response.errorMessage)
-            is ApiResponse.Empty -> Resource.Error("Recipes is Empty")
-        }
+        )
+    }
 
     override suspend fun getRecipeById(recipeId: String): Resource<RecipeEntity> =
         when (val response = remoteDataSource.getRecipeById(recipeId)) {

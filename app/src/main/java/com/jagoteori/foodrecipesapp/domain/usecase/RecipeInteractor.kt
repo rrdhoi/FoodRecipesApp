@@ -14,7 +14,7 @@ class RecipeInteractor(private val recipeRepository: RecipeRepository) : RecipeU
     override suspend fun getRecipeById(recipeId: String): Resource<RecipeEntity> =
         recipeRepository.getRecipeById(recipeId)
 
-    override suspend fun getMyRecipes(): Resource<List<RecipeEntity>> = recipeRepository.getMyRecipes()
+    override suspend fun getMyRecipes(): Flow<Resource<List<RecipeEntity>>> = recipeRepository.getMyRecipes()
 
     override suspend fun addRecipe(recipe: RecipeEntity): Resource<String> =
         recipeRepository.addRecipe(recipe)

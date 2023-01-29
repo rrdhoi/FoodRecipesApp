@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FoodRecipesApp</string>
+    <string name="app_name">Resep Kita</string>
     <string name="menu_home">Home</string>
     <string name="menu_add_recipe">Add Recipe</string>
     <string name="menu_profile">Profile</string>
@@ -27,6 +27,8 @@
 
     <string-array name="tab_category">
         <item>Ayam</item>
+        <item>Sapi</item>
+        <item>Sayur</item>
         <item>Bakso</item>
         <item>Ikan</item>
     </string-array>

@@ -1,4 +1,4 @@
-package com.jagoteori.foodrecipesapp.presentation.ui.pages
+package com.jagoteori.foodrecipesapp.presentation.ui.pages.profile
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

@@ -12,7 +12,7 @@ interface RecipeRepository {
     suspend fun getAllRecipes(): Flow<Resource<List<RecipeEntity>>>
     suspend fun getRecipeById(recipeId: String): Resource<RecipeEntity>
     suspend fun getCategoryRecipe(category: String) : Resource<List<RecipeEntity>>
-    suspend fun getMyRecipes(): Resource<List<RecipeEntity>>
+    suspend fun getMyRecipes(): Flow<Resource<List<RecipeEntity>>>
     suspend fun addRecipe(recipe: RecipeEntity): Resource<String>
     suspend fun addComment(recipeId: String, commentEntity: CommentEntity): Resource<String>
     suspend fun userSignIn(email: String, password: String): Flow<Resource<String>>

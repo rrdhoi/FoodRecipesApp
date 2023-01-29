@@ -21,16 +21,17 @@ import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor300
 
 @Composable
-fun ItemCategoryCard(
+fun CardCategoryItem(
+    modifier: Modifier,
     title: String?,
     publisher: String?,
     imageRecipe: String?,
     itemOnClick: () -> Unit,
 ) {
-    ConstraintLayout(modifier = Modifier.padding(bottom = 16.dp).fillMaxSize().clickable { itemOnClick() }) {
+    ConstraintLayout(modifier = modifier.padding(bottom = 16.dp).fillMaxSize().clickable { itemOnClick() }) {
         val (idImageRecipe, idTitle, idPublisher) = createRefs()
 
-        Box(modifier = Modifier
+        Box(modifier = modifier
             .clip(RoundedCornerShape(12))
             .constrainAs(idImageRecipe) {
                 top.linkTo(parent.top)
@@ -40,12 +41,12 @@ fun ItemCategoryCard(
                 model = imageRecipe,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
+                modifier = modifier
                     .size(80.dp, 80.dp)
             )
             Surface(
                 color = BlackColor500,
-                modifier = Modifier
+                modifier = modifier
                     .width(80.dp)
                     .height(80.dp)
                     .alpha(0.15f)
@@ -59,7 +60,7 @@ fun ItemCategoryCard(
             maxLines = 2,
             fontSize = 16.sp,
             color = BlackColor500,
-            modifier = Modifier.constrainAs(idTitle) {
+            modifier = modifier.constrainAs(idTitle) {
                 top.linkTo(idImageRecipe.top, margin = 8.dp)
                 start.linkTo(idImageRecipe.end, margin = 16.dp)
                 end.linkTo(parent.end, margin = 8.dp)
@@ -74,7 +75,7 @@ fun ItemCategoryCard(
             maxLines = 2,
             fontSize = 14.sp,
             color = GreyColor300,
-            modifier = Modifier.constrainAs(idPublisher) {
+            modifier = modifier.constrainAs(idPublisher) {
                 top.linkTo(idTitle.bottom, margin = 4.dp)
                 start.linkTo(idTitle.start)
             }
