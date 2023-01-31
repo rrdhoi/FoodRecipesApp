@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,42 +15,26 @@ import androidx.compose.ui.unit.sp
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.presentation.home.HomeViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.UiState
+import com.jagoteori.foodrecipesapp.presentation.ui.components.LoadingProgressIndicator
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier,
-    homeViewModel: HomeViewModel,
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = koinViewModel(),
     onItemRecommendationClicked: (recipe: RecipeEntity) -> Unit,
     onItemCategoryClicked: (recipe: RecipeEntity) -> Unit
 ) {
     Column(modifier = modifier.fillMaxSize()) {
+        if (homeViewModel.isLoading) LoadingProgressIndicator(modifier = modifier)
         homeViewModel.uiState.collectAsState().value.let { uiState ->
             when (uiState) {
-                is UiState.Loading -> {
-                    Column(
-                        modifier = modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CircularProgressIndicator(
-                            color = BlackColor500,
-                            modifier = modifier.size(48.dp)
-                        )
-                    }
-                }
+                is UiState.Loading -> {}
                 is UiState.Success -> {
+                    homeViewModel.isLoading = false
                     if (uiState.data == null) {
-                        Column(
-                            modifier = modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            CircularProgressIndicator(
-                                color = BlackColor500,
-                                modifier = modifier.size(48.dp)
-                            )
-                        }
+                       LoadingProgressIndicator(modifier = modifier)
                     } else {
                         ListRecommendationRecipe(
                             modifier = modifier,

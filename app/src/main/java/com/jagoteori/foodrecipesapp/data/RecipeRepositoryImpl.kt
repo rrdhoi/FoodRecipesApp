@@ -89,7 +89,7 @@ class RecipeRepositoryImpl(private val remoteDataSource: RemoteDataSource) : Rec
             else -> Resource.Error("Unknown Error")
         }
 
-    override suspend fun userSignIn(email: String, password: String): Flow<Resource<String>> =
+    override suspend fun userSignIn(email: String, password: String): Flow<Resource<Boolean>> =
         flow {
             emit(Resource.Loading())
             emit(
@@ -102,7 +102,7 @@ class RecipeRepositoryImpl(private val remoteDataSource: RemoteDataSource) : Rec
         }
 
 
-    override suspend fun userSignUp(user: UserEntity, password: String): Flow<Resource<String>> =
+    override suspend fun userSignUp(user: UserEntity, password: String): Flow<Resource<Boolean>> =
         flow {
             emit(Resource.Loading())
             when (val response =

@@ -15,7 +15,7 @@ interface RemoteDataSource {
     suspend fun getMyRecipes(): ApiResponse<List<RecipeModel>>
     suspend fun addRecipe(recipe: RecipeModel): ApiResponse<String>
     suspend fun addComment(recipeId: String, commentModel: CommentModel): ApiResponse<String>
-    suspend fun userSignIn(email: String, password: String): ApiResponse<String>
-    suspend fun userSignUp(user: UserModel, password: String): ApiResponse<String>
+    suspend fun userSignIn(email: String, password: String): ApiResponse<Boolean>
+    suspend fun userSignUp(user: UserModel, password: String): ApiResponse<Boolean>
     suspend fun updateUser(user: UserModel) : ApiResponse<String>
 }

@@ -4,8 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jagoteori.foodrecipesapp.app.extention.errorHandler
@@ -24,8 +22,11 @@ class SignInViewModel(val useCase: RecipeUseCase) : ViewModel() {
     var passwordError by mutableStateOf(false)
     var passwordErrorMessage by mutableStateOf("")
 
-    private val _userSignIn = MutableLiveData<Resource<String>>()
-    val userSignIn: LiveData<Resource<String>> get() = _userSignIn
+    var userSignIn by mutableStateOf<Resource<Boolean>>(Resource.Success(false))
+    private set
+//    private val _userSignIn = MutableStateFlow<UiState<String>>(UiState.Loading)
+//    val userSignIn: StateFlow<UiState<String>> get() = _userSignIn
+
 
     fun checkFormIsValid(): Boolean {
         val isNotEmailValid =
@@ -52,7 +53,7 @@ class SignInViewModel(val useCase: RecipeUseCase) : ViewModel() {
 
     fun login() = viewModelScope.launch(Dispatchers.Main) {
         useCase.userSignIn(email.text, password.text).collect {
-            _userSignIn.postValue(it)
+            userSignIn = it
         }
     }
 }

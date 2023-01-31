@@ -26,10 +26,10 @@ class RecipeInteractor(private val recipeRepository: RecipeRepository) : RecipeU
         commentEntity: CommentEntity
     ): Resource<String> = recipeRepository.addComment(recipeId, commentEntity)
 
-    override suspend fun userSignIn(email: String, password: String): Flow<Resource<String>> =
+    override suspend fun userSignIn(email: String, password: String): Flow<Resource<Boolean>> =
         recipeRepository.userSignIn(email, password)
 
-    override suspend fun userSignUp(user: UserEntity, password: String): Flow<Resource<String>> =
+    override suspend fun userSignUp(user: UserEntity, password: String): Flow<Resource<Boolean>> =
         recipeRepository.userSignUp(user, password)
 
     override suspend fun getMyUser(): Resource<UserEntity> = recipeRepository.getMyUser()

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.Fragment
-import com.jagoteori.foodrecipesapp.AuthActivity
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.databinding.ProfileFragmentBinding
 import com.jagoteori.foodrecipesapp.presentation.profile.my_recipes.MyRecipesFragment
@@ -37,12 +36,11 @@ class ProfileFragment : Fragment() {
                     goToReportsFragment()
                 }, onSignOut = {
                     viewModel.signOut()
-                    startActivity(Intent(context, AuthActivity::class.java))
+//                    startActivity(Intent(context, AuthActivity::class.java))
                 })
             }
         }
     }
-
 
     private fun goToReportsFragment() {
         val myRecipesFragment = MyRecipesFragment()

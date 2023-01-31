@@ -4,8 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jagoteori.foodrecipesapp.app.extention.isNotErrorHandler
@@ -35,8 +33,9 @@ class SignUpViewModel(val useCase: RecipeUseCase) : ViewModel() {
     var passwordRepeatError by mutableStateOf(false)
     var passwordRepeatErrorMessage by mutableStateOf("")
 
-    private val _userSignUp = MutableLiveData<Resource<String>>()
-    val userSignUp: LiveData<Resource<String>> get() = _userSignUp
+    var userSignUp by mutableStateOf<Resource<Boolean>>(Resource.Success(false))
+        private set
+
 
     fun checkFormIsInvalid(): Boolean {
         val isInvalidFullName = (fullName.isEmptyOrBlank("nama lengkap") {
@@ -105,7 +104,7 @@ class SignUpViewModel(val useCase: RecipeUseCase) : ViewModel() {
             )
 
             useCase.userSignUp(user, password.text).collect {
-                _userSignUp.postValue(it)
+                userSignUp = it
             }
         }
 }

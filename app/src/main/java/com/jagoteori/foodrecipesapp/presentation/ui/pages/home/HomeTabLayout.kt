@@ -19,6 +19,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.presentation.ui.extention.NoRippleTheme
+import com.jagoteori.foodrecipesapp.presentation.ui.theme.BackgroundColor
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor100
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.WhiteColor
@@ -43,7 +44,7 @@ fun HomeTabLayout(
                 modifier = modifier.padding(vertical = 16.dp, horizontal = 24.dp),
                 selectedTabIndex = pagerState.currentPage,
                 edgePadding = 0.dp,
-                backgroundColor = Color.Transparent,
+                backgroundColor = BackgroundColor,
                 indicator = {
                     Box {}
                 },

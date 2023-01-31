@@ -30,13 +30,14 @@ import com.jagoteori.foodrecipesapp.presentation.ui.components.TopAppBarBlack
 import com.jagoteori.foodrecipesapp.presentation.ui.extention.NoRippleTheme
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.*
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
 @Composable
 fun DetailRecipeScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     recipeEntity: RecipeEntity,
-    detailViewModel: DetailRecipeViewModel,
+    detailViewModel: DetailRecipeViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val scrollState = rememberScrollState()

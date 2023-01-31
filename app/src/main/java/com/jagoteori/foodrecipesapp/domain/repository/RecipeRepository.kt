@@ -15,8 +15,8 @@ interface RecipeRepository {
     suspend fun getMyRecipes(): Flow<Resource<List<RecipeEntity>>>
     suspend fun addRecipe(recipe: RecipeEntity): Resource<String>
     suspend fun addComment(recipeId: String, commentEntity: CommentEntity): Resource<String>
-    suspend fun userSignIn(email: String, password: String): Flow<Resource<String>>
-    suspend fun userSignUp(user: UserEntity, password: String): Flow<Resource<String>>
+    suspend fun userSignIn(email: String, password: String): Flow<Resource<Boolean>>
+    suspend fun userSignUp(user: UserEntity, password: String): Flow<Resource<Boolean>>
     suspend fun getMyUser(): Resource<UserEntity>
     suspend fun updateUser(user: UserEntity) : Resource<String>
 }

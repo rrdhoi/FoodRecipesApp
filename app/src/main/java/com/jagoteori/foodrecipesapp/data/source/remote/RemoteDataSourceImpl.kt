@@ -107,19 +107,19 @@ class RemoteDataSourceImpl(private val firestore: FirestoreQuery) : RemoteDataSo
         }
     }
 
-    override suspend fun userSignIn(email: String, password: String): ApiResponse<String> =
+    override suspend fun userSignIn(email: String, password: String): ApiResponse<Boolean> =
         withContext(Dispatchers.IO) {
             safeCall {
                 firestore.userSignIn(email, password).await()
-                ApiResponse.Success("Sign In Successfully")
+                ApiResponse.Success(true)
             }
         }
 
-    override suspend fun userSignUp(user: UserModel, password: String): ApiResponse<String> =
+    override suspend fun userSignUp(user: UserModel, password: String): ApiResponse<Boolean> =
         withContext(Dispatchers.IO) {
             safeCall {
                 firestore.userSignUp(user, password).await()
-                ApiResponse.Success("Sign Up Successfully")
+                ApiResponse.Success(true)
             }
         }
 

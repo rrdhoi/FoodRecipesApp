@@ -34,7 +34,8 @@ fun CardRecommendationItem(
             val (idImageRecipe, idTitle, idPublisher) = createRefs()
 
             Box(modifier = modifier
-                .clip(RoundedCornerShape(12))
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
                 .constrainAs(idImageRecipe) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -47,7 +48,6 @@ fun CardRecommendationItem(
                         .size(220.dp, 120.dp)
                 )
                 Surface(
-                    shape = RoundedCornerShape(bottomStart = 10.dp, topEnd = 22.dp),
                     color = BlackColor500,
                     modifier = modifier
                         .width(220.dp)
