@@ -22,10 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.jagoteori.foodrecipesapp.R
+import com.jagoteori.foodrecipesapp.presentation.extention.noRippleClickable
 import com.jagoteori.foodrecipesapp.presentation.ui.components.HintPlaceholder
 import com.jagoteori.foodrecipesapp.presentation.ui.components.outlineTextFieldColor
-import com.jagoteori.foodrecipesapp.presentation.extention.noRippleClickable
-import com.jagoteori.foodrecipesapp.app.service.ComposeFileProvider
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.BackgroundColor
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor100
@@ -86,26 +85,24 @@ fun RowItemStepCook(
         listImageUri: SnapshotStateList<Uri?>,
     ) -> Unit
 ) {
-    val localContext = LocalContext.current
     val description = remember { mutableStateOf(TextFieldValue("")) }
 
     val listImagesUri = remember { mutableStateListOf<Uri?>() }
 
     var imagesSize by remember { mutableStateOf(0) }
 
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-        onResult = { success ->
-            if (success) {
-                imagesSize++
-            }
-        }
-    )
-
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
+            if (uri != null) {
+                when (imagesSize) {
+                    0 -> listImagesUri.add(0, uri)
+                    1 -> listImagesUri.add(1, uri)
+                    2 -> listImagesUri.add(2, uri)
+                }
 
+                imagesSize++
+            }
         }
     )
 
@@ -157,16 +154,7 @@ fun RowItemStepCook(
                         .padding(12.dp)
                         .background(color = WhiteColor)
                         .noRippleClickable {
-                            val uri = ComposeFileProvider.getImageUri(localContext)
-
-                            when (imagesSize) {
-                                0 -> listImagesUri.add(0, uri)
-                                1 -> listImagesUri.add(1, uri)
-                                2 -> listImagesUri.add(2, uri)
-                            }
-
-
-                            cameraLauncher.launch(uri)
+                            imagePicker.launch("image/*")
                         }
                 ) {
                     Image(

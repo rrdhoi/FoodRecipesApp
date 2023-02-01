@@ -1,6 +1,7 @@
 package com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.view_model
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
@@ -15,8 +16,12 @@ import com.jagoteori.foodrecipesapp.domain.entity.UserEntity
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeUseCase
 import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.components.ItemIngredient
 import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.components.ItemStepCook
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.util.Timer
 
 class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
     private val _addRecipe = MutableLiveData<Resource<String>>()
@@ -45,7 +50,7 @@ class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
 
     var imageRecipe by mutableStateOf("")
 
-    var isLoading by mutableStateOf(false)
+    var isLoading = mutableStateOf(false)
 
     var imagePickerDialogState by mutableStateOf(false)
 
@@ -54,11 +59,11 @@ class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
     }
 
     fun onSubmitRecipe() {
-        isLoading = true
+        isLoading.value = true
         val listIngredient = mutableListOf<IngredientEntity>()
         val listStepCook = mutableListOf<StepCookEntity>()
 
-        listItemIngredientForm.forEach { listItem ->
+        for (listItem in listItemIngredientForm) {
             val ingredientEntity = IngredientEntity(
                 ingredient = listItem.value.ingredient?.value?.text,
                 quantity = listItem.value.quantity?.value?.text,
@@ -93,10 +98,16 @@ class AddRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            useCase.addRecipe(recipeEntity)
+            when(useCase.addRecipe(recipeEntity)) {
+                is Resource.Success -> {
+                    isLoading.value = false
+                }
+                is Resource.Error -> {
+                    isLoading.value = false
+                }
+                else -> {}
+            }
         }
-
-        isLoading = false
     }
 
     init {

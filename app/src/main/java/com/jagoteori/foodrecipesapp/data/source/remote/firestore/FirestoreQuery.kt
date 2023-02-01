@@ -1,6 +1,7 @@
 package com.jagoteori.foodrecipesapp.data.source.remote.firestore
 
 import android.net.Uri
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -53,6 +54,7 @@ class FirestoreQuery(
         val refImageRecipe =
             storage.getReference("/${recipe.publisherId}/recipes/${createDocument.id}")
 
+        Log.d("djancok", "oioi:: ${recipe}")
         val uploadRecipeImageTask =
             refImageRecipe.putFile(Uri.parse(recipe.recipePicture))
 

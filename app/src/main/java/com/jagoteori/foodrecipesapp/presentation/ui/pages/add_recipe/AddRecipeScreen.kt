@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.jagoteori.foodrecipesapp.R
+import com.jagoteori.foodrecipesapp.presentation.extention.noRippleClickable
 import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomOutlineTextField
 import com.jagoteori.foodrecipesapp.presentation.ui.components.ImagePickerDialog
 import com.jagoteori.foodrecipesapp.presentation.ui.components.TopAppBarBlack
-import com.jagoteori.foodrecipesapp.presentation.extention.noRippleClickable
 import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.components.ListIngredientsForm
 import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.components.ListStepsCookForm
 import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.view_model.AddRecipeViewModel
@@ -35,6 +35,7 @@ import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor100
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColorTextInput
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.WhiteColor
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 
 @Composable
@@ -43,6 +44,7 @@ fun AddRecipeScreen(
     viewModel: AddRecipeViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
+
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     var hasImage by remember { mutableStateOf(false) }
@@ -62,6 +64,7 @@ fun AddRecipeScreen(
         onResult = { uri ->
             hasImage = uri != null
             imageUri = uri
+            viewModel.imageRecipe = imageUri.toString()
             viewModel.imagePickerDialogState = false
         }
     )
@@ -178,7 +181,9 @@ fun AddRecipeScreen(
                         backgroundColor = BlackColor500,
                         contentColor = WhiteColor
                     ),
-                    onClick = { viewModel.onSubmitRecipe() }
+                    onClick = {
+                        viewModel.onSubmitRecipe()
+                    }
                 ) {
 
                     Text(
@@ -187,10 +192,10 @@ fun AddRecipeScreen(
                         )
                     )
                 }
-
             }
 
-            if (viewModel.isLoading) {
+
+            if (viewModel.isLoading.value) {
                 Surface(
                     modifier = modifier
                         .fillMaxSize()
