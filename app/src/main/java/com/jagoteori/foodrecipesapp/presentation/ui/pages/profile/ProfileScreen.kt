@@ -24,18 +24,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.jagoteori.foodrecipesapp.R
-import com.jagoteori.foodrecipesapp.presentation.profile.ProfileViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.components.ImagePickerDialog
-import com.jagoteori.foodrecipesapp.presentation.ui.extention.noRippleClickable
+import com.jagoteori.foodrecipesapp.presentation.extention.noRippleClickable
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.profile.view_model.ProfileViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor100
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor300
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor500
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileScreen(
-    modifier: Modifier,
-    profileViewModel: ProfileViewModel,
+    modifier: Modifier = Modifier,
+    profileViewModel: ProfileViewModel = koinViewModel(),
     onClickReports: () -> Unit,
     onSignOut: () -> Unit,
 ) {

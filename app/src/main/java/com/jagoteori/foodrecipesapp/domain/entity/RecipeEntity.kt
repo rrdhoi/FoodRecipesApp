@@ -5,14 +5,14 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RecipeEntity(
-    val id: String?,
-    val title: String?,
-    val category: String?,
-    val description: String?,
-    val publisherId: String?,
-    val publisher: String?,
-    val recipePicture: String?,
-    val listIngredients: List<IngredientEntity>?,
-    val listStepCooking: List<StepCookEntity>?,
-    val listComments : List<CommentEntity>?
+    val id: String? = null,
+    val title: String? = null,
+    val category: String? = null,
+    val description: String? = null,
+    val publisherId: String? = null,
+    val publisher: String? = null,
+    val recipePicture: String? = null,
+    val listIngredients: List<IngredientEntity>? = null,
+    val listStepCooking: List<StepCookEntity>? = null,
+    val listComments : List<CommentEntity>? = null
 ) : Parcelable

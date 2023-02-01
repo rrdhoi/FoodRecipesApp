@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import com.jagoteori.foodrecipesapp.presentation.navigation.RootNavGraph
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.FoodRecipeAppTheme
 import timber.log.Timber
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
 
                 ) {
-                    FoodRecipeApp()
+                    RootNavGraph()
                 }
             }
         }

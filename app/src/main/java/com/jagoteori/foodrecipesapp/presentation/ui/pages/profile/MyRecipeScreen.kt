@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,20 +13,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
-import com.jagoteori.foodrecipesapp.presentation.profile.my_recipes.MyRecipesViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.UiState
 import com.jagoteori.foodrecipesapp.presentation.ui.components.CardCategoryItem
 import com.jagoteori.foodrecipesapp.presentation.ui.components.ErrorMessage
 import com.jagoteori.foodrecipesapp.presentation.ui.components.TopAppBarBlack
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.profile.view_model.MyRecipesViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MyRecipeScreen(
-    modifier: Modifier,
-    viewModel: MyRecipesViewModel,
+    modifier: Modifier = Modifier,
+    viewModel: MyRecipesViewModel = koinViewModel(),
     onItemClicked: (recipe: RecipeEntity) -> Unit,
     onBackPressed: () -> Unit
 ) {
+
     Scaffold(topBar = {
         TopAppBarBlack(title = "ResepKu", icon = painterResource(
             id = R.drawable.ic_arrow_back_white
@@ -49,21 +52,12 @@ fun MyRecipeScreen(
                     val listMyRecipe = uiState.data
 
                     if (listMyRecipe == null) {
-                        Column(
-                            modifier = modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            CircularProgressIndicator(
-                                color = BlackColor500,
-                                modifier = modifier.size(48.dp)
+                        Box(modifier = modifier.fillMaxSize(),contentAlignment = Alignment.Center) {
+                            ErrorMessage(
+                                modifier = modifier.padding(paddingValues),
+                                message = "Belum ada resep"
                             )
                         }
-                    } else if (listMyRecipe.isEmpty()) {
-                        ErrorMessage(
-                            modifier = modifier.padding(paddingValues),
-                            message = "Belum ada resep"
-                        )
                     } else {
                         LazyColumn(
                             modifier = Modifier

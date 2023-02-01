@@ -22,7 +22,7 @@ fun LoadingProgressIndicator(modifier: Modifier) {
     ) {
         Surface(
             modifier = modifier
-                .alpha(0.6f),
+                .alpha(0.5f),
             color = GreyColor300,
         ) {}
 

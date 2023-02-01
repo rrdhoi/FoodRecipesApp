@@ -1,6 +1,8 @@
 package com.jagoteori.foodrecipesapp.presentation.ui.pages.sign_up
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.ScaffoldState
@@ -15,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.data.Resource
-import com.jagoteori.foodrecipesapp.presentation.auth.sign_up.SignUpViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.components.ButtonPrimary
 import com.jagoteori.foodrecipesapp.presentation.ui.components.LoadingProgressIndicator
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.sign_up.components.FormSignUp
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.sign_up.view_model.SignUpViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor300
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +38,13 @@ fun SignUpScreen(
     navigateToHome: () -> Unit
 ) {
     Box(modifier = modifier.fillMaxSize()) {
-        Column(modifier = modifier.padding(horizontal = 24.dp)) {
+        Column(
+            modifier = modifier
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+                .verticalScroll(
+                    rememberScrollState()
+                )
+        ) {
             FormSignUpHeader(modifier = modifier, onClickIcon = navigateToLogin)
             FormSignUp(modifier = modifier, viewModel = viewModel)
             ButtonPrimary(
@@ -56,13 +65,14 @@ fun SignUpScreen(
                 LoadingProgressIndicator(modifier = modifier)
             }
             is Resource.Success -> {
-                Timber.d("data? : ${response.message}")
-                if (response.data == true) {
-                    navigateToHome()
-                }
+               LaunchedEffect(response) {
+                   if (response.data == true) {
+                       navigateToHome()
+                   }
+               }
             }
             is Resource.Error -> {
-                LaunchedEffect(Unit) {
+                LaunchedEffect(response) {
                     scope.launch {
                         scaffoldState.snackbarHostState.showSnackbar(
                             message = response.message.toString()

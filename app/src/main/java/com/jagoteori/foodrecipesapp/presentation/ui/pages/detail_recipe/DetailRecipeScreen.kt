@@ -25,22 +25,24 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
-import com.jagoteori.foodrecipesapp.presentation.detail_recipe.DetailRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.components.TopAppBarBlack
-import com.jagoteori.foodrecipesapp.presentation.ui.extention.NoRippleTheme
+import com.jagoteori.foodrecipesapp.presentation.extention.NoRippleTheme
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe.components.CommentsList
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe.components.IngredientsList
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe.components.StepsCookList
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.detail_recipe.view_model.DetailRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.*
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
 @Composable
 fun DetailRecipeScreen(
     modifier: Modifier = Modifier,
-    recipeEntity: RecipeEntity,
-    detailViewModel: DetailRecipeViewModel = koinViewModel(),
+    detailViewModel: DetailRecipeViewModel,
     onBackPressed: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
+    val recipeEntity = detailViewModel.recipeEntity
 
     Scaffold(
         topBar = {
@@ -105,7 +107,7 @@ fun DetailTabLayout(
                     Tab(
                         selected = pagerState.currentPage == index,
                         onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-                        modifier = modifier.background(color = WhiteColor),
+                        modifier = modifier.background(color = BackgroundColor).height(40.dp),
                         text = {
                             Text(
                                 text = item,

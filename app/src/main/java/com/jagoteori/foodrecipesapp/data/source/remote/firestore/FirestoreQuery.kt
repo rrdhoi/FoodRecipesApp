@@ -1,7 +1,6 @@
 package com.jagoteori.foodrecipesapp.data.source.remote.firestore
 
 import android.net.Uri
-import android.os.Environment
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -13,7 +12,6 @@ import com.jagoteori.foodrecipesapp.data.model.RecipeModel
 import com.jagoteori.foodrecipesapp.data.model.StepCookModel
 import com.jagoteori.foodrecipesapp.data.model.UserModel
 import com.jagoteori.foodrecipesapp.data.source.remote.await
-import java.io.File
 
 
 class FirestoreQuery(
@@ -140,6 +138,12 @@ class FirestoreQuery(
         }
 
     override suspend fun updateUser(user: UserModel): Task<Void> {
+        val mapUser = mutableMapOf<String, Any>(
+            "userId" to user.userId!!,
+            "name" to user.name!!,
+            "email" to user.email!!,
+        )
+
         if (user.profilePicture != null) {
             val ref = storage.getReference("/${user.userId}/profile/image_profile")
             val uploadProfile = ref.putFile(Uri.parse(user.profilePicture))
@@ -151,20 +155,12 @@ class FirestoreQuery(
                     }
                 }
                 ref.downloadUrl.addOnSuccessListener {
-                    user.profilePicture = it.toString()
+                    mapUser["profilePicture"] = it.toString()
                 }.addOnFailureListener {
                     throw Throwable("Failed to upload image profile")
                 }
             }.await()
         }
-
-        val mapUser = mutableMapOf<String, Any>(
-            "userId" to user.userId!!,
-            "name" to user.name!!,
-            "email" to user.email!!,
-        )
-
-        if (user.profilePicture != null) mapUser["profilePicture"] = user.profilePicture!!
 
         return firestore.collection("users").document(user.userId!!).update(mapUser)
     }

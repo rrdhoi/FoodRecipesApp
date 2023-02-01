@@ -1,14 +1,11 @@
 package com.jagoteori.foodrecipesapp.presentation.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import com.jagoteori.foodrecipesapp.DummyData.errorMessage
 import com.jagoteori.foodrecipesapp.DummyData.listRecipeEntity
-import com.jagoteori.foodrecipesapp.DummyData.recipeEntity
 import com.jagoteori.foodrecipesapp.LiveDataTestUtil.captureValues
 import com.jagoteori.foodrecipesapp.data.Resource
-import com.jagoteori.foodrecipesapp.domain.entity.RecipeEntity
 import com.jagoteori.foodrecipesapp.domain.usecase.RecipeUseCase
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.home.view_model.HomeViewModel
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

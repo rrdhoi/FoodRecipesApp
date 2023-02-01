@@ -20,7 +20,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.jagoteori.foodrecipesapp.R
 import com.jagoteori.foodrecipesapp.app.service.ComposeFileProvider
-import com.jagoteori.foodrecipesapp.presentation.ui.extention.noRippleClickable
+import com.jagoteori.foodrecipesapp.presentation.extention.noRippleClickable
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor300
 
 

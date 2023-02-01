@@ -19,26 +19,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.jagoteori.foodrecipesapp.R
-import com.jagoteori.foodrecipesapp.presentation.add_recipe.AddRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.components.CustomOutlineTextField
 import com.jagoteori.foodrecipesapp.presentation.ui.components.ImagePickerDialog
 import com.jagoteori.foodrecipesapp.presentation.ui.components.TopAppBarBlack
-import com.jagoteori.foodrecipesapp.presentation.ui.extention.noRippleClickable
+import com.jagoteori.foodrecipesapp.presentation.extention.noRippleClickable
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.components.ListIngredientsForm
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.components.ListStepsCookForm
+import com.jagoteori.foodrecipesapp.presentation.ui.pages.add_recipe.view_model.AddRecipeViewModel
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.BlackColor500
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColor100
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.GreyColorTextInput
 import com.jagoteori.foodrecipesapp.presentation.ui.theme.WhiteColor
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun AddRecipeScreen(
-    modifier: Modifier,
-    viewModel: AddRecipeViewModel,
+    modifier: Modifier = Modifier,
+    viewModel: AddRecipeViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -213,14 +215,5 @@ fun AddRecipeScreen(
                     viewModel.imagePickerDialogState = false
                 })
         }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun AddRecipeScreenPreview() {
-    MaterialTheme() {
-//        AddRecipeScreen(modifier = Modifier, viewModel = addRecipeViewModel)
     }
 }
