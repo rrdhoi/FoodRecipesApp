@@ -47,6 +47,7 @@ fun NavGraphBuilder.mainNavGraph(
                 }
             },
             onNavigateToLogin = {
+                detailRecipeViewModel.user = null
                 rootNavController.navigate(Graph.AUTHENTICATION)
             },
             onNavigateToMyRecipes = {

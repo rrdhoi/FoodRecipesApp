@@ -21,7 +21,7 @@ class DetailRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
     private var addCommentError by mutableStateOf(false)
     private var addCommentErrorMessage by mutableStateOf("")
 
-    private var _user: UserEntity? = null
+    var user: UserEntity? = null
     var recipeEntity by mutableStateOf(RecipeEntity())
 
     fun setRecipe(newRecipe: RecipeEntity) {
@@ -30,12 +30,12 @@ class DetailRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
 
     fun addComment(recipeId: String) =
         viewModelScope.launch(Dispatchers.Main) {
-            if (_user != null) {
+            if (user != null) {
                 val comment = CommentEntity(
                     id = null,
-                    name = _user?.name,
+                    name = user?.name,
                     message = addComment.text,
-                    profilePicture = _user?.profilePicture
+                    profilePicture = user?.profilePicture
                 )
                 useCase.addComment(recipeId, comment)
             }
@@ -56,7 +56,7 @@ class DetailRecipeViewModel(private val useCase: RecipeUseCase) : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             val user = useCase.getMyUser()
             if (user is Resource.Success) {
-                _user = user.data
+                this@DetailRecipeViewModel.user = user.data
             }
         }
     }

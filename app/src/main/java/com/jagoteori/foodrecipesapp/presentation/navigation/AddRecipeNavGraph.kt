@@ -16,7 +16,7 @@ fun NavGraphBuilder.addRecipeNavGraph(navHostController: NavHostController
         composable(Screen.AddNewRecipe.route) {
             AddRecipeScreen(
                 onBackPressed = {
-                    navHostController.navigateUp()
+                    navHostController.popBackStack()
                 }
             )
         }
